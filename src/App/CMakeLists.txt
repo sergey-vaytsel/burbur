@@ -1,6 +1,21 @@
-cmake_minimum_required(VERSION 3.19.0)
-project(App)
+set(MODULE_NAME App)
 
-add_executable(App main.cpp Window.h Window.cpp linmath.h)
+set(SRC_LIST
+    src/main.cpp
 
-target_link_libraries(App ${CONAN_LIBS})
+    src/Window.h
+    src/Window.cpp
+    src/linmath.h
+)
+
+project(${MODULE_NAME})
+
+add_exec(${MODULE_NAME} ${SRC_LIST})
+
+target_link_libraries(${MODULE_NAME} PUBLIC
+    CONAN_PKG::glad
+    CONAN_PKG::glfw
+    CONAN_PKG::opengl
+
+    Render
+)
