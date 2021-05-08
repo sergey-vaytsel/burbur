@@ -1,0 +1,28 @@
+сущности
+    Object
+        meshes
+    Mesh
+        material_link
+        vertexes
+        matrix
+    Material
+        shader_program
+        uniforms
+        required_vertex_info
+    Scene
+        object_links_with_matrixes
+        world_matrix
+    Camera
+        position_matrix
+        view_matrix
+        projection_matrix
+    Render
+        camera
+        scene
+    ResourceManager
+        materials
+        objects
+    Viewport (?)
+
+для AssImp нужны будут отдельные реализации скорее всего, чтобы из структуры в структуру не перекладывать. можно обёртку сделать с биндингами
+батчинг - можем в сцене группировать по разным критериям, например сделать индекс мешей по материалам

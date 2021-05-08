@@ -1,19 +1,15 @@
 from conans import ConanFile, CMake
 
 class Recipe(ConanFile):
-    settings = {
-        "os": None,
-        "compiler": {
-            "Visual Studio": {"version": ["16"]}
-        },
-        "build_type": None,
-        "arch": None
-    }
+    settings = "os", "compiler", "build_type", "arch"
     requires = [
-        "glew/2.2.0",
-        "imgui/1.82",
-        "sdl2/2.0.14@bincrafters/stable",
+        'glfw/3.3.4',
+        'glad/0.1.34',
+        'glm/0.9.9.8'
     ]
-    generators = [
-        "cmake"
-    ]
+    generators = 'cmake', 'cmake_find_package'
+
+    def build(self):
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
