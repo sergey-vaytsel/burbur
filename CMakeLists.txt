@@ -31,4 +31,3 @@ conan_cmake_run(
     NO_OUTPUT_DIRS)
 
 add_subdirectory(src/App)
-add_subdirectory(src/Render)

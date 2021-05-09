@@ -1,10 +1,9 @@
 сущности
     Object
-        meshes
+        meshes_with_matrixes
     Mesh
         material_link
         vertexes
-        matrix
     Material
         shader_program
         uniforms
