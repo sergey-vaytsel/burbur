@@ -1,10 +1,7 @@
 set(MODULE_NAME Render)
 
-
-
 set(SRC_LIST
     Render.h
-
     src/Render.cpp
 )
 

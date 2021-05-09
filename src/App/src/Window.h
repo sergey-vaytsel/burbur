@@ -1,4 +1,6 @@
 #include <string>
+#include <tuple>
+
 #include <glad/glad.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -10,8 +12,16 @@ public:
     int init(unsigned width, unsigned height, const std::string & name);
     bool shouldClose() const;
 
-    void clearAndSwap(GLbitfield clear_mask);
+    void clear(GLbitfield clear_mask);
+    void swapBuffers();
     void pollEvents();
+
+    int width();
+    int height();    
+    std::tuple<int, int> wh();
+
 private:
-    GLFWwindow * glfw_window_ptr;
+    GLFWwindow * _glfw_window_ptr;
+    int _width;
+    int _height;
 };

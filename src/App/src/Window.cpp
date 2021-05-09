@@ -19,7 +19,7 @@ void key_callback(GLFWwindow * const window, const int key, const int scancode, 
 } // inline namespace
 
 Window::~Window() {
-    glfwDestroyWindow(glfw_window_ptr);
+    glfwDestroyWindow(_glfw_window_ptr);
     glfwTerminate();
 }
 
@@ -33,33 +33,41 @@ int Window::init(unsigned width, unsigned height, const std::string & name) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-    glfw_window_ptr = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    _glfw_window_ptr = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
 
-    if (!glfw_window_ptr)
+    if (!_glfw_window_ptr)
     {
         glfwTerminate();
         return -2;
     }
 
-    glfwMakeContextCurrent(glfw_window_ptr);
+    glfwMakeContextCurrent(_glfw_window_ptr);
     glfwSwapInterval(1);
     gladLoadGL();
 
-    glfwSetKeyCallback(glfw_window_ptr, key_callback);
+    glfwSetKeyCallback(_glfw_window_ptr, key_callback);
 
     return 0;
 }
 
 bool Window::shouldClose() const {
-    return glfwWindowShouldClose(glfw_window_ptr);
+    return glfwWindowShouldClose(_glfw_window_ptr);
 }
 
-void Window::clearAndSwap(GLbitfield clear_mask) {
+void Window::clear(GLbitfield clear_mask) {
+    glfwGetFramebufferSize(_glfw_window_ptr, &_width, &_height);
+    glViewport(0, 0, _width, _height);
     glClear(clear_mask);
+}
 
-    glfwSwapBuffers(glfw_window_ptr);
+void Window::swapBuffers() {
+    glfwSwapBuffers(_glfw_window_ptr);
 }
 
 void Window::pollEvents() {
     glfwPollEvents();
 }
+
+int Window::width() { return _width; }
+int Window::height() { return _height; }
+std::tuple<int, int> Window::wh() { return { _width, _height }; };
