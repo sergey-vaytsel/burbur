@@ -1,3 +1,4 @@
+#pragma once
 #include <vector>
 #include <unordered_map>
 #include <memory>
@@ -6,23 +7,28 @@
 
 //! TODO: разнести по файлам
 
-class Material {
+class Material
+{
 public:
-    enum class VertexAttributes {
+    enum class VertexAttributes
+    {
         VEC3_POSITION,
         VEC3_RGB_COLOR,
     };
-    enum class Uniforms {
+    enum class Uniforms
+    {
         MAT4_MVP_MATRIX,
     };
     //! TODO: интерфейс
-}
+};
 
 using MaterialLink = std::shared_ptr<Material>;
 
-class Mesh {
+class Mesh
+{
 public:
-    struct Vertex {
+    struct Vertex
+    {
         float x;
         float y;
         float z;
@@ -32,14 +38,17 @@ public:
         float b;
     };
     Mesh(std::vector<Vertex> &&, MaterialLink &&);
+
 private:
     std::vector<Vertex> vertex_buffer;
 };
 
-class Object {
+class Object
+{
 public:
     using MatrixToMeshMap = std::unordered_map<glm::mat4, Mesh>;
     Object(MatrixToMeshMap &&);
+
 private:
     MatrixToMeshMap meshes;
 };

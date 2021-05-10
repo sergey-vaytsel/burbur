@@ -17,4 +17,5 @@ target_link_libraries(${MODULE_NAME} PUBLIC
     CONAN_PKG::glad
     CONAN_PKG::glfw
     CONAN_PKG::glm
+    CONAN_PKG::fmt
 )

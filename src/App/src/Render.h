@@ -1,12 +1,15 @@
+#pragma once
 #include "Object.h"
 
-class Scene {
+class Scene
+{
 public:
     void add_object(Object &&);
     //! TODO
 };
 
-class Render {
+class Render
+{
 public:
     //! TODO
 };
