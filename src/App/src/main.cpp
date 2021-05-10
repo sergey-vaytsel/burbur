@@ -20,9 +20,9 @@ int main(void)
     }
 
     GLuint program;
-    GLint mvp_location;
 
     {
+        // create Mesh
         static const struct
         {
             float x, y;
@@ -33,6 +33,12 @@ int main(void)
                 {0.6f, -0.4f, 0.f, 1.f, 0.f},
                 {0.f, 0.6f, 0.f, 0.f, 1.f}};
 
+        GLuint vertex_buffer;
+        glGenBuffers(1, &vertex_buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+        // create material
         static const char *vertex_shader_text =
             "#version 110\n"
             "uniform mat4 MVP;\n"
@@ -53,12 +59,8 @@ int main(void)
             "    gl_FragColor = vec4(color, 1.0);\n"
             "}\n";
 
-        GLuint vertex_buffer, vertex_shader, fragment_shader;
-        GLint vpos_location, vcol_location;
-
-        glGenBuffers(1, &vertex_buffer);
-        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        // compile material shader program
+        GLuint vertex_shader, fragment_shader;
 
         vertex_shader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
@@ -73,7 +75,8 @@ int main(void)
         glAttachShader(program, fragment_shader);
         glLinkProgram(program);
 
-        mvp_location = glGetUniformLocation(program, "MVP");
+        // bind vertex attributes
+        GLint vpos_location, vcol_location;
         vpos_location = glGetAttribLocation(program, "vPos");
         vcol_location = glGetAttribLocation(program, "vCol");
 
@@ -91,13 +94,18 @@ int main(void)
 
         auto [width, height] = window.wh();
 
+        // use material shader program
+        glUseProgram(program);
+
+        // update material uniforms
+        GLint mvp_location = glGetUniformLocation(program, "MVP");
         glm::mat4x4 m = glm::rotate(glm::mat4(1.0f), static_cast<GLfloat>(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
         auto ratio = static_cast<float>(width) / height;
         glm::mat4x4 p = glm::ortho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
         glm::mat4x4 mvp = p * m;
-
-        glUseProgram(program);
         glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(mvp));
+
+        //draw mesh
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         window.swapBuffers();

@@ -1,27 +1,44 @@
 #pragma once
 #include <vector>
 #include <unordered_map>
+#include <set>
 #include <memory>
 
 #include <glm/glm.hpp>
 
 //! TODO: разнести по файлам
 
+enum class VertexAttributes
+{
+    VEC3_POSITION,
+    VEC3_RGB_COLOR,
+    END
+};
+
+enum class Uniforms
+{
+    MAT4_MVP_MATRIX,
+    END
+};
+
+class ShaderProgram
+{
+public:
+    using GlShaderProgramId = int;
+
+    void add_fragment_shader(std::string &&text);
+    void add_vertex_shader(std::string &&text);
+    GlShaderProgramId compile();
+};
+
 class Material
 {
 public:
-    enum class VertexAttributes
-    {
-        VEC3_POSITION,
-        VEC3_RGB_COLOR,
-    };
-    enum class Uniforms
-    {
-        MAT4_MVP_MATRIX,
-    };
-    //! TODO: интерфейс
+    Material(
+        std::set<VertexAttributes> &&required_vertex_attributes,
+        std::set<Uniforms> &&required_uniforms,
+        ShaderProgram &&shader_program);
 };
-
 using MaterialLink = std::shared_ptr<Material>;
 
 class Mesh
@@ -37,10 +54,12 @@ public:
         float g;
         float b;
     };
-    Mesh(std::vector<Vertex> &&, MaterialLink &&);
+
+    Mesh(std::vector<Vertex> &&, std::vector<unsigned> &&, MaterialLink &&);
 
 private:
     std::vector<Vertex> vertex_buffer;
+    std::vector<unsigned> index_buffer;
 };
 
 class Object
