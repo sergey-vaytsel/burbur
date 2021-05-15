@@ -14,12 +14,9 @@ public:
     int init(unsigned width, unsigned height, const std::string &name);
     bool shouldClose() const;
 
-    void clear(GLbitfield clear_mask);
     void swapBuffers();
     void pollEvents();
 
-    int width();
-    int height();
     std::tuple<int, int> wh();
 
 private:

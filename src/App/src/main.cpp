@@ -1,3 +1,5 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include <iostream>
 
 #include <glm/glm.hpp>
@@ -6,18 +8,40 @@
 
 #include <fmt/format.h>
 
+#include <glad/glad.h>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
 #include "Window.h"
 #include "Render.h"
 #include "Object.h"
 
+void reshape(int width, int height)
+{
+    const double aspect_ratio = static_cast<double>(width) / height;
+    const double fov = 45.0;
+    const double z_near = 1.0;
+    const double z_far = 1000.0;
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    GLdouble fH = tan(fov / 360 * M_PI) * z_near;
+    GLdouble fW = fH * aspect_ratio;
+    glFrustum(-fW, fW, -fH, fH, z_near, z_far);
+    glViewport(0, 0, width, height);
+}
+
 int main(int, void **)
 {
     Window window{};
+
     if (auto res = window.init(640, 480, "Project"))
     {
         std::cout << fmt::format("Init window error code: {}", res);
         return -1;
     }
+
+    gladLoadGL();
 
     GLuint program;
 
@@ -79,9 +103,9 @@ int main(int, void **)
 
     while (!window.shouldClose())
     {
-        window.clear(GL_COLOR_BUFFER_BIT);
-
         auto [width, height] = window.wh();
+        reshape(width, height);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         // use material shader program
         glUseProgram(program);

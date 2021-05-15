@@ -47,7 +47,6 @@ int Window::init(unsigned width, unsigned height, const std::string &name)
 
     glfwMakeContextCurrent(_glfw_window_ptr);
     glfwSwapInterval(1);
-    gladLoadGL();
 
     glfwSetKeyCallback(_glfw_window_ptr, key_callback);
 
@@ -57,13 +56,6 @@ int Window::init(unsigned width, unsigned height, const std::string &name)
 bool Window::shouldClose() const
 {
     return glfwWindowShouldClose(_glfw_window_ptr);
-}
-
-void Window::clear(GLbitfield clear_mask)
-{
-    glfwGetFramebufferSize(_glfw_window_ptr, &_width, &_height);
-    glViewport(0, 0, _width, _height);
-    glClear(clear_mask);
 }
 
 void Window::swapBuffers()
@@ -76,6 +68,8 @@ void Window::pollEvents()
     glfwPollEvents();
 }
 
-int Window::width() { return _width; }
-int Window::height() { return _height; }
-std::tuple<int, int> Window::wh() { return {_width, _height}; };
+std::tuple<int, int> Window::wh()
+{
+    glfwGetFramebufferSize(_glfw_window_ptr, &_width, &_height);
+    return {_width, _height};
+};
