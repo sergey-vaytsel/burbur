@@ -4,7 +4,9 @@ set(SRC_LIST
     src/main.cpp
 
     src/Object.h
+    src/Object.cpp
     src/Render.h
+    src/Render.cpp
     src/Window.h
     src/Window.cpp
 )

@@ -3,6 +3,8 @@
 #include <unordered_map>
 #include <set>
 #include <memory>
+#include <cstdint>
+#include <optional>
 
 #include <glm/glm.hpp>
 
@@ -24,11 +26,17 @@ enum class Uniforms
 class ShaderProgram
 {
 public:
-    using GlShaderProgramId = int;
-
     void add_fragment_shader(std::string &&text);
     void add_vertex_shader(std::string &&text);
-    GlShaderProgramId compile();
+
+    std::uint32_t program();
+
+private:
+    void compile();
+
+    std::optional<std::string> _vertex_shader_text = std::nullopt;
+    std::optional<std::string> _fragment_shader_text = std::nullopt;
+    std::optional<std::uint32_t> _program = std::nullopt;
 };
 
 class Material
@@ -58,8 +66,8 @@ public:
     Mesh(std::vector<Vertex> &&, std::vector<unsigned> &&, MaterialLink &&);
 
 private:
-    std::vector<Vertex> vertex_buffer;
-    std::vector<unsigned> index_buffer;
+    std::vector<Vertex> _vertex_buffer;
+    std::vector<unsigned> _index_buffer;
 };
 
 class Object
@@ -69,5 +77,5 @@ public:
     Object(MatrixToMeshMap &&);
 
 private:
-    MatrixToMeshMap meshes;
+    MatrixToMeshMap _meshes;
 };

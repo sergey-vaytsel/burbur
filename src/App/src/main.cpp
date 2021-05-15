@@ -10,7 +10,7 @@
 #include "Render.h"
 #include "Object.h"
 
-int main(void)
+int main(int, void **)
 {
     Window window{};
     if (auto res = window.init(640, 480, "Project"))
@@ -59,21 +59,10 @@ int main(void)
             "    gl_FragColor = vec4(color, 1.0);\n"
             "}\n";
 
-        // compile material shader program
-        GLuint vertex_shader, fragment_shader;
-
-        vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
-        glCompileShader(vertex_shader);
-
-        fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
-        glCompileShader(fragment_shader);
-
-        program = glCreateProgram();
-        glAttachShader(program, vertex_shader);
-        glAttachShader(program, fragment_shader);
-        glLinkProgram(program);
+        ShaderProgram shader_program;
+        shader_program.add_fragment_shader(std::string(fragment_shader_text));
+        shader_program.add_vertex_shader(std::string(vertex_shader_text));
+        program = shader_program.program();
 
         // bind vertex attributes
         GLint vpos_location, vcol_location;
