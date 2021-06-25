@@ -3,28 +3,22 @@
 
 #include <glad/glad.h>
 
-void ShaderProgram::add_fragment_shader(std::string &&text)
+ShaderProgramBuilder &ShaderProgramBuilder::add_fragment_shader(std::string &&text)
 {
     _fragment_shader_text = std::move(text);
+    return *this;
 }
 
-void ShaderProgram::add_vertex_shader(std::string &&text)
+ShaderProgramBuilder &ShaderProgramBuilder::add_vertex_shader(std::string &&text)
 {
     _vertex_shader_text = std::move(text);
+    return *this;
 }
 
-GLuint ShaderProgram::program()
+GLuint ShaderProgramBuilder::build()
 {
-    if (!_program)
+    auto vertex_shader = [this]() -> GLuint
     {
-        compile();
-    }
-    return *_program;
-}
-
-void ShaderProgram::compile()
-{
-    auto vertex_shader = [this]() -> GLuint {
         if (_vertex_shader_text)
         {
             GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -36,7 +30,8 @@ void ShaderProgram::compile()
         throw std::runtime_error("ShaderProgram::compile() : no vertex shader text added.");
     }();
 
-    auto fragment_shader = [this]() -> GLuint {
+    auto fragment_shader = [this]() -> GLuint
+    {
         if (_fragment_shader_text)
         {
             GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -48,8 +43,12 @@ void ShaderProgram::compile()
         throw std::runtime_error("ShaderProgram::compile() : no fragment shader text added.");
     }();
 
-    _program = glCreateProgram();
-    glAttachShader(*_program, vertex_shader);
-    glAttachShader(*_program, fragment_shader);
-    glLinkProgram(*_program);
+    auto program = glCreateProgram();
+
+    glAttachShader(program, vertex_shader);
+    glAttachShader(program, fragment_shader);
+
+    glLinkProgram(program);
+
+    return program;
 }

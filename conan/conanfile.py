@@ -8,6 +8,7 @@ class Recipe(ConanFile):
         'glad/0.1.34',
         'glm/0.9.9.8',
         'fmt/7.1.3',
+        'assimp/5.0.1',
     ]
     generators = 'cmake', 'cmake_find_package'
 

@@ -11,5 +11,10 @@ public:
 class Render
 {
 public:
-    //! TODO
+    Render();
+    void update_viewport_size(std::uint16_t width, std::uint16_t height);
+
+    double fov = 45.0;
+    double z_near = 1.0;
+    double z_far = 1000.0;
 };

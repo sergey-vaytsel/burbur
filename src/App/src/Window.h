@@ -17,10 +17,8 @@ public:
     void swapBuffers();
     void pollEvents();
 
-    std::tuple<int, int> wh();
+    std::tuple<std::uint16_t, std::uint16_t> size();
 
 private:
     GLFWwindow *_glfw_window_ptr;
-    int _width;
-    int _height;
 };

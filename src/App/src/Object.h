@@ -23,20 +23,17 @@ enum class Uniforms
     END
 };
 
-class ShaderProgram
+class ShaderProgramBuilder
 {
 public:
-    void add_fragment_shader(std::string &&text);
-    void add_vertex_shader(std::string &&text);
+    ShaderProgramBuilder &add_fragment_shader(std::string &&text);
+    ShaderProgramBuilder &add_vertex_shader(std::string &&text);
 
-    std::uint32_t program();
+    std::uint32_t build();
 
 private:
-    void compile();
-
     std::optional<std::string> _vertex_shader_text = std::nullopt;
     std::optional<std::string> _fragment_shader_text = std::nullopt;
-    std::optional<std::uint32_t> _program = std::nullopt;
 };
 
 class Material
@@ -45,7 +42,7 @@ public:
     Material(
         std::set<VertexAttributes> &&required_vertex_attributes,
         std::set<Uniforms> &&required_uniforms,
-        ShaderProgram &&shader_program);
+        ShaderProgramBuilder &&shader_program);
 };
 using MaterialLink = std::shared_ptr<Material>;
 

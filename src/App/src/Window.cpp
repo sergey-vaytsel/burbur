@@ -68,8 +68,11 @@ void Window::pollEvents()
     glfwPollEvents();
 }
 
-std::tuple<int, int> Window::wh()
+std::tuple<std::uint16_t, std::uint16_t> Window::size()
 {
-    glfwGetFramebufferSize(_glfw_window_ptr, &_width, &_height);
-    return {_width, _height};
+    int width, height;
+    glfwGetFramebufferSize(_glfw_window_ptr, &width, &height);
+    return {
+        static_cast<std::uint16_t>(width),
+        static_cast<std::uint16_t>(height)};
 };
