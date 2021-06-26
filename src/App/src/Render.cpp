@@ -13,10 +13,11 @@ Render::Render()
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0); /* Uses default lighting parameters */
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
     glEnable(GL_NORMALIZE);
     glClearColor(0.2f, 0.2f, 0.2f, 1.f);
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-    glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+    glColorMaterial(GL_FRONT, GL_DIFFUSE);
 }
 
 void Render::update_viewport_size(std::uint16_t width, std::uint16_t height)

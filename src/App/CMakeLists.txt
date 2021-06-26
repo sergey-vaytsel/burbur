@@ -7,6 +7,10 @@ set(SRC_LIST
     src/Object.cpp
     src/Render.h
     src/Render.cpp
+    src/Scene.h
+    src/Scene.cpp
+    src/ShaderProgramBuilder.h
+    src/ShaderProgramBuilder.cpp
     src/Window.h
     src/Window.cpp
 )
