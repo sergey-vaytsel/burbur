@@ -3,6 +3,8 @@ set(MODULE_NAME App)
 set(SRC_LIST
     src/main.cpp
 
+    src/Camera.h
+    src/Camera.cpp
     src/Object.h
     src/Object.cpp
     src/Render.h

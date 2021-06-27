@@ -17,9 +17,10 @@
 
 #include <glad/glad.h>
 
-#include "Window.h"
+#include "Camera.h"
 #include "Render.h"
 #include "ShaderProgramBuilder.h"
+#include "Window.h"
 
 namespace fs = std::filesystem;
 
@@ -41,7 +42,6 @@ int main(int, void **)
     GLuint program = []
     {
         const auto shader_path = g_project_path / "bin/shaders";
-
         auto vertex_shader_file_path = shader_path / "default.vsh";
         auto fragment_shader_file_path = shader_path / "default.fsh";
 
@@ -63,7 +63,7 @@ int main(int, void **)
     const auto model_filename = g_project_path / "test/models/3d/box.uc";
     const aiScene *model_scene_ptr = model_importer.ReadFile(
         model_filename.string(),
-        aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
+        0); // aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_ConvertToLeftHanded);
 
     if (model_scene_ptr == nullptr)
     {

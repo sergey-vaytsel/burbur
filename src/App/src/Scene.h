@@ -2,9 +2,13 @@
 
 #include "Object.h"
 
-class Scene
+class Node
 {
-public:
-    void add_object(Object &&);
-    //! TODO
+};
+
+class Light : public Node
+{
+};
+class Scene : public Node
+{
 };
