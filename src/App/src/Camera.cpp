@@ -4,35 +4,10 @@
 
 #include <glm/gtx/vector_angle.hpp>
 
-Camera::Camera(float vertical_fov_rad, float aspect_ratio, float near_plane, float far_plane)
-{
-    set_projection(vertical_fov_rad, aspect_ratio, near_plane, far_plane);
-}
-
-const glm::vec3 &Camera::position()
-{
-    return _position;
-}
-
 void Camera::set_position(const glm::vec3 &position)
 {
     _position = position;
     recalculate_view();
-}
-
-const glm::vec3 &Camera::point_of_view()
-{
-    return _point_of_view;
-}
-
-const glm::vec3 &Camera::view_direction()
-{
-    return _view_direction;
-}
-
-const glm::vec3 &Camera::up_direction()
-{
-    return _up_direction;
 }
 
 void Camera::set_view_direction(const glm::vec3 &view_direction)
@@ -52,17 +27,6 @@ void Camera::look_at(const glm::vec3 &point_of_view, const glm::vec3 &up_directi
     recalculate_view();
 }
 
-float Camera::vertical_fov()
-{
-    return _vertical_fov_rad;
-}
-
-void Camera::set_vertical_fov(float vertical_fov_rad)
-{
-    _vertical_fov_rad = vertical_fov_rad;
-    recalculate_projection();
-}
-
 void Camera::set_aspect_ratio_if_needed(float aspect_ratio)
 {
     constexpr auto eps = std::numeric_limits<float>::epsilon();
@@ -80,16 +44,6 @@ const glm::mat4 &Camera::view_projection()
         _view_projection_matrix = _projection_matrix * _view_matrix;
     }
     return _view_projection_matrix;
-}
-
-void Camera::set_projection(float vertical_fov_rad, float aspect_ratio, float near_plane, float far_plane)
-{
-    _vertical_fov_rad = vertical_fov_rad;
-    _aspect_ratio = aspect_ratio;
-    _near_plane = near_plane;
-    _far_plane = far_plane;
-
-    recalculate_projection();
 }
 
 void Camera::recalculate_projection()

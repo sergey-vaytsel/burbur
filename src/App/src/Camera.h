@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 const auto g_default_view_direction = glm::vec3(0.0f, 0.0f, 1.0f);
+const auto g_default_up_direction = glm::vec3(0.0f, 1.0f, 0.0f);
 
 struct ViewportSize
 {
@@ -15,24 +16,13 @@ class Camera
 {
 public:
     Camera() = default;
-    Camera(float vertical_fov, float aspect_ratio_rad, float near_plane, float far_plane);
 
-    const glm::vec3 &position();
     void set_position(const glm::vec3 &position);
-
-    const glm::vec3 &point_of_view();
-    const glm::vec3 &view_direction();
-    const glm::vec3 &up_direction();
     void set_view_direction(const glm::vec3 &view_direction);
-    void look_at(const glm::vec3 &point_of_view, const glm::vec3 &up_direction = glm::vec3(0.0f, 1.0f, 0.0f));
-
-    float vertical_fov();
-    void set_vertical_fov(float vertical_fov);
-
+    void look_at(const glm::vec3 &point_of_view, const glm::vec3 &up_direction = g_default_up_direction);
     void set_aspect_ratio_if_needed(float aspect_ratio);
 
     const glm::mat4 &view_projection();
-    void set_projection(float vertical_fov, float aspect_ratio_rad, float near_plane, float far_plane);
 
 private:
     void recalculate_projection();
