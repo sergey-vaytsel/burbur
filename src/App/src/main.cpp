@@ -38,6 +38,7 @@ int main(int, void **)
     }
 
     Render render;
+    Camera camera;
 
     GLuint program = []
     {
@@ -60,10 +61,10 @@ int main(int, void **)
     glUseProgram(program);
 
     Assimp::Importer model_importer;
-    const auto model_filename = g_project_path / "test/models/3d/box.uc";
+    const auto model_filename = g_project_path / "test/models/AC/Wuson.ac";
     const aiScene *model_scene_ptr = model_importer.ReadFile(
         model_filename.string(),
-        0); // aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_ConvertToLeftHanded);
+        0);
 
     if (model_scene_ptr == nullptr)
     {
@@ -74,12 +75,12 @@ int main(int, void **)
         return -1;
     }
 
-    {
-        const auto vertices = model_scene_ptr->mMeshes[0]->mVertices;
-        const auto vertex_size = sizeof(vertices[0]);
-        const auto vertices_count = model_scene_ptr->mMeshes[0]->mNumVertices;
-        const auto vertices_size = vertices_count * vertex_size;
+    const auto vertices = model_scene_ptr->mMeshes[0]->mVertices;
+    const auto vertex_size = sizeof(vertices[0]);
+    const auto vertices_count = model_scene_ptr->mMeshes[0]->mNumVertices;
+    const auto vertices_size = vertices_count * vertex_size;
 
+    {
         GLuint vertex_buffer_id;
         glGenBuffers(1, &vertex_buffer_id);
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id);
@@ -99,34 +100,34 @@ int main(int, void **)
             (void *)0);
     }
 
+    camera.set_position(glm::vec3(.0f, .0f, -3.0f));
+
     while (!window.shouldClose())
     {
         auto [width, height] = window.size();
-        render.update_viewport_size(width, height);
+        auto ratio = static_cast<float>(width) / height;
+        render.update_viewport_size_if_needed(width, height);
+        camera.set_aspect_ratio_if_needed(ratio);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-        // update material uniforms
-        glm::mat4x4 m = glm::rotate(
-                            glm::mat4(1.0f),
-                            static_cast<GLfloat>(glfwGetTime()),
-                            glm::vec3(1.0f, 0.0f, 0.0f)) *
-                        glm::rotate(
-                            glm::mat4(1.0f),
-                            static_cast<GLfloat>(glfwGetTime()),
-                            glm::vec3(0.0f, 1.0f, 0.0f)) *
-                        glm::rotate(
-                            glm::mat4(1.0f),
-                            static_cast<GLfloat>(glfwGetTime()),
-                            glm::vec3(0.0f, 0.0f, 1.0f));
-        auto ratio = static_cast<float>(width) / height;
-        glm::mat4 v = glm::translate(glm::mat4(1.0f), glm::vec3(.0f, .0f, -20.0f));
-        glm::mat4x4 p = glm::perspective(static_cast<float>(M_PI) / 4.0f, ratio, 1.f, 1000.f);
-        glm::mat4x4 mvp = p * v * m;
+        glm::mat4x4 model_matrix = glm::rotate(
+                                       glm::mat4(1.0f),
+                                       static_cast<GLfloat>(glfwGetTime()),
+                                       glm::vec3(1.0f, 0.0f, 0.0f)) *
+                                   glm::rotate(
+                                       glm::mat4(1.0f),
+                                       static_cast<GLfloat>(glfwGetTime()),
+                                       glm::vec3(0.0f, 1.0f, 0.0f)) *
+                                   glm::rotate(
+                                       glm::mat4(1.0f),
+                                       static_cast<GLfloat>(glfwGetTime()),
+                                       glm::vec3(0.0f, 0.0f, 1.0f));
 
+        glm::mat4x4 mvp = camera.view_projection() * model_matrix;
         GLint mvp_location = glGetUniformLocation(program, "u_mat4_mvp");
         glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(mvp));
 
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 36);
+        glDrawArrays(GL_LINES, 0, vertices_count);
 
         window.swapBuffers();
         window.pollEvents();

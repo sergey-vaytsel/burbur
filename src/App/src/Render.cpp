@@ -20,8 +20,13 @@ Render::Render()
     glColorMaterial(GL_FRONT, GL_DIFFUSE);
 }
 
-void Render::update_viewport_size(std::uint16_t width, std::uint16_t height)
+void Render::update_viewport_size_if_needed(std::uint16_t width, std::uint16_t height)
 {
+    if (width == _width && height == _height)
+    {
+        return;
+    }
+
     const double aspect_ratio = static_cast<double>(width) / height;
 
     glMatrixMode(GL_PROJECTION);
