@@ -23,12 +23,12 @@ GLuint ShaderProgramBuilder::build()
         if (_vertex_shader_text)
         {
             GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-            const auto vsh_text = _vertex_shader_text->c_str();
+            const auto vsh_text = _vertex_shader_text->data();
             glShaderSource(vertex_shader, 1, &vsh_text, NULL);
             glCompileShader(vertex_shader);
             return vertex_shader;
         }
-        throw std::runtime_error("ShaderProgram::compile() : no vertex shader text added.");
+        throw std::runtime_error("ShaderProgramBuilder::build() : no vertex shader text added.");
     }();
 
     auto fragment_shader = [this]() -> GLuint
@@ -36,12 +36,12 @@ GLuint ShaderProgramBuilder::build()
         if (_fragment_shader_text)
         {
             GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-            const auto fsh_text = _fragment_shader_text->c_str();
+            const auto fsh_text = _fragment_shader_text->data();
             glShaderSource(fragment_shader, 1, &fsh_text, NULL);
             glCompileShader(fragment_shader);
             return fragment_shader;
         }
-        throw std::runtime_error("ShaderProgram::compile() : no fragment shader text added.");
+        throw std::runtime_error("ShaderProgramBuilder::build() : no fragment shader text added.");
     }();
 
     auto program = glCreateProgram();
