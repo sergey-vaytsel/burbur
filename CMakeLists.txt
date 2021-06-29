@@ -6,6 +6,8 @@ set(BUILD_SHARED_LIBS Off)
 set(CMAKE_CXX_STANDARD 20 CACHE INTERNAL "Default C++ standard for targets")
 option(CMAKE_CXX_EXTENSIONS OFF "Turn on compiler specific extensions")
 
+option(GENERATE_TESTS "Option turning on tests" ON)
+
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(common NO_POLICY_SCOPE)
 

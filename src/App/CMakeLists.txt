@@ -7,7 +7,7 @@ set(SRC_LIST
     src/Window.cpp
 )
 
-add_exec(${MODULE_NAME} ${SRC_LIST})
+add_burbur_executable(${MODULE_NAME} ${SRC_LIST})
 
 target_link_libraries(${MODULE_NAME} PUBLIC
     Render

@@ -12,10 +12,20 @@ set(SRC_LIST
     src/ShaderProgramBuilder.cpp
 )
 
-add_lib(${MODULE_NAME} STATIC ${SRC_LIST})
+add_burbur_library(${MODULE_NAME} STATIC ${SRC_LIST})
 
 target_link_libraries(${MODULE_NAME} PRIVATE
     CONAN_PKG::glad
     CONAN_PKG::glm
     CONAN_PKG::fmt
 )
+
+if(GENERATE_TESTS)
+    SET(TEST_LIST
+        test/CatchMain.cpp
+        test/CameraTest.cpp
+    )
+    add_burbur_test(${MODULE_NAME}
+        SOURCE_LIST ${TEST_LIST}
+    )
+endif()
