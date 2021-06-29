@@ -1,5 +1,7 @@
 #pragma once
 
+#include <numbers>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -34,7 +36,7 @@ private:
     glm::vec3 _point_of_view{0.0f};
     glm::vec3 _view_direction = g_default_view_direction;
 
-    float _vertical_fov_rad = glm::pi<float>() * 0.25f;
+    float _vertical_fov_rad = std::numbers::pi_v<float> / 4;
     float _aspect_ratio = 1.333f;
     float _near_plane = 1.0f;
     float _far_plane = 1000.0f;

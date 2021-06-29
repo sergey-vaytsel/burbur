@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include <Render/Camera.h>
 
 #include <limits>
 
@@ -7,12 +7,15 @@
 void Camera::set_position(const glm::vec3 &position)
 {
     _position = position;
+
     recalculate_view();
 }
 
 void Camera::set_view_direction(const glm::vec3 &view_direction)
 {
     _view_direction = view_direction;
+    _view_direction /= _view_direction.length();
+
     recalculate_view();
 }
 

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19.0)
 
-project(Project)
+project(Burbur)
 
 set(BUILD_SHARED_LIBS Off)
 set(CMAKE_CXX_STANDARD 20 CACHE INTERNAL "Default C++ standard for targets")
@@ -30,3 +30,4 @@ conan_cmake_run(
     NO_OUTPUT_DIRS)
 
 add_subdirectory(src/App)
+add_subdirectory(src/Render)

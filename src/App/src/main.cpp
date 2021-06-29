@@ -1,5 +1,4 @@
-#define _USE_MATH_DEFINES
-#include <cmath>
+#include <numbers>
 
 #include <iostream>
 #include <fstream>
@@ -17,9 +16,10 @@
 
 #include <glad/glad.h>
 
-#include "Camera.h"
-#include "Render.h"
-#include "ShaderProgramBuilder.h"
+#include <Render/Camera.h>
+#include <Render/Render.h>
+#include <Render/ShaderProgramBuilder.h>
+
 #include "Window.h"
 
 namespace fs = std::filesystem;
@@ -100,7 +100,7 @@ int main(int, void **)
             (void *)0);
     }
 
-    camera.set_position(glm::vec3(.0f, .0f, -3.0f));
+    camera.set_position(glm::vec3(.0f, -1.f, -5.0f));
 
     while (!window.shouldClose())
     {
@@ -111,17 +111,9 @@ int main(int, void **)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         glm::mat4x4 model_matrix = glm::rotate(
-                                       glm::mat4(1.0f),
-                                       static_cast<GLfloat>(glfwGetTime()),
-                                       glm::vec3(1.0f, 0.0f, 0.0f)) *
-                                   glm::rotate(
-                                       glm::mat4(1.0f),
-                                       static_cast<GLfloat>(glfwGetTime()),
-                                       glm::vec3(0.0f, 1.0f, 0.0f)) *
-                                   glm::rotate(
-                                       glm::mat4(1.0f),
-                                       static_cast<GLfloat>(glfwGetTime()),
-                                       glm::vec3(0.0f, 0.0f, 1.0f));
+            glm::mat4(1.0f),
+            static_cast<GLfloat>(glfwGetTime()),
+            glm::vec3(0.0f, 0.0f, 1.0f));
 
         glm::mat4x4 mvp = camera.view_projection() * model_matrix;
         GLint mvp_location = glGetUniformLocation(program, "u_mat4_mvp");

@@ -1,4 +1,4 @@
-#include "ShaderProgramBuilder.h"
+#include <Render/ShaderProgramBuilder.h>
 
 #include <stdexcept>
 

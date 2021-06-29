@@ -3,25 +3,15 @@ set(MODULE_NAME App)
 set(SRC_LIST
     src/main.cpp
 
-    src/Camera.h
-    src/Camera.cpp
-    src/Object.h
-    src/Object.cpp
-    src/Render.h
-    src/Render.cpp
-    src/Scene.h
-    src/Scene.cpp
-    src/ShaderProgramBuilder.h
-    src/ShaderProgramBuilder.cpp
     src/Window.h
     src/Window.cpp
 )
 
-project(${MODULE_NAME})
-
 add_exec(${MODULE_NAME} ${SRC_LIST})
 
 target_link_libraries(${MODULE_NAME} PUBLIC
+    Render
+
     CONAN_PKG::glad
     CONAN_PKG::glfw
     CONAN_PKG::glm

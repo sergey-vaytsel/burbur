@@ -1,7 +1,6 @@
-#define _USE_MATH_DEFINES
-#include <cmath>
+#include <Render/Render.h>
 
-#include "Render.h"
+#include <numbers>
 
 #include <glad/glad.h>
 
@@ -31,7 +30,7 @@ void Render::update_viewport_size_if_needed(std::uint16_t width, std::uint16_t h
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    GLdouble fH = tan(fov / 360 * M_PI) * z_near;
+    GLdouble fH = tan(fov / 360 * std::numbers::pi_v<float>) * z_near;
     GLdouble fW = fH * aspect_ratio;
     glFrustum(-fW, fW, -fH, fH, z_near, z_far);
     glViewport(0, 0, width, height);
