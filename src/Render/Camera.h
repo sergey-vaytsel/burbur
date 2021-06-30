@@ -8,12 +8,6 @@
 const auto g_default_view_direction = glm::vec3(0.0f, 0.0f, 1.0f);
 const auto g_default_up_direction = glm::vec3(0.0f, 1.0f, 0.0f);
 
-struct ViewportSize
-{
-    std::uint16_t width;
-    std::uint16_t height;
-};
-
 class Camera
 {
 public:
@@ -24,7 +18,11 @@ public:
     void look_at(const glm::vec3 &point_of_view, const glm::vec3 &up_direction = g_default_up_direction);
     void set_aspect_ratio_if_needed(float aspect_ratio);
 
-    const glm::mat4 &view_projection();
+    [[nodiscard]] const glm::mat4 &view_projection();
+
+    [[nodiscard]] const glm::vec3 &position();
+    [[nodiscard]] const glm::vec3 &point_of_view();
+    [[nodiscard]] const glm::vec3 &view_direction();
 
 private:
     void recalculate_projection();
@@ -33,7 +31,7 @@ private:
 
     glm::vec3 _position{0.0f};
     glm::vec3 _up_direction = glm::vec3{0.0f, 1.0f, 0.0f};
-    glm::vec3 _point_of_view{0.0f};
+    glm::vec3 _point_of_view = g_default_view_direction;
     glm::vec3 _view_direction = g_default_view_direction;
 
     float _vertical_fov_rad = std::numbers::pi_v<float> / 4;

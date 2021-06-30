@@ -7,15 +7,14 @@
 void Camera::set_position(const glm::vec3 &position)
 {
     _position = position;
-
+    _point_of_view = _position + _view_direction;
     recalculate_view();
 }
 
 void Camera::set_view_direction(const glm::vec3 &view_direction)
 {
-    _view_direction = view_direction;
-    _view_direction /= _view_direction.length();
-
+    _view_direction = glm::normalize(view_direction);
+    _point_of_view = _position + _view_direction;
     recalculate_view();
 }
 
@@ -23,10 +22,7 @@ void Camera::look_at(const glm::vec3 &point_of_view, const glm::vec3 &up_directi
 {
     _point_of_view = point_of_view;
     _up_direction = up_direction;
-
-    _view_direction = _point_of_view - _position;
-    _view_direction /= _view_direction.length();
-
+    _view_direction = glm::normalize(_point_of_view - _position);
     recalculate_view();
 }
 
@@ -49,6 +45,21 @@ const glm::mat4 &Camera::view_projection()
     return _view_projection_matrix;
 }
 
+const glm::vec3 &Camera::position()
+{
+    return _position;
+}
+
+const glm::vec3 &Camera::point_of_view()
+{
+    return _point_of_view;
+}
+
+const glm::vec3 &Camera::view_direction()
+{
+    return _view_direction;
+}
+
 void Camera::recalculate_projection()
 {
     _projection_matrix = glm::perspective(_vertical_fov_rad, _aspect_ratio, _near_plane, _far_plane);
@@ -57,14 +68,7 @@ void Camera::recalculate_projection()
 
 void Camera::recalculate_view()
 {
-    const auto rotate_matrix = g_default_view_direction == _view_direction
-                                   ? glm::mat4(1.0f)
-                                   : glm::rotate(
-                                         glm::mat4(1.0f),
-                                         glm::angle(g_default_view_direction, _view_direction),
-                                         g_default_view_direction * _view_direction);
-    const auto translate_matrix = glm::translate(glm::mat4(1.0f), _position);
-    _view_matrix = rotate_matrix * translate_matrix;
+    _view_matrix = glm::lookAt(_position, _point_of_view, _up_direction);
     need_recalculate_view_projection();
 }
 

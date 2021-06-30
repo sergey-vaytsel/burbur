@@ -22,10 +22,12 @@ target_link_libraries(${MODULE_NAME} PRIVATE
 
 if(GENERATE_TESTS)
     SET(TEST_LIST
-        test/CatchMain.cpp
         test/CameraTest.cpp
+        test/CatchMain.cpp
+        test/TestUtils.h
     )
     add_burbur_test(${MODULE_NAME}
         SOURCE_LIST ${TEST_LIST}
+        DEPS_LIST CONAN_PKG::glm
     )
 endif()
