@@ -31,5 +31,7 @@ conan_cmake_run(
     BUILD missing
     NO_OUTPUT_DIRS)
 
+enable_testing ()
+
 add_subdirectory(src/App)
 add_subdirectory(src/Render)

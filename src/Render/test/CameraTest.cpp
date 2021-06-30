@@ -1,20 +1,48 @@
+#include "TestUtils.h"
 #include <catch2/catch.hpp>
 
-int Factorial(int number)
+#include <Render/Camera.h>
+
+TEST_CASE("Default camera consistence", "[camera]")
 {
-    return number <= 1 ? number : Factorial(number - 1) * number; // fail
-    // return number <= 1 ? 1      : Factorial( number - 1 ) * number;  // pass
+    Camera camera{};
+    REQUIRE(glm::normalize(camera.view_direction()) == camera.view_direction());
+    REQUIRE(glm::normalize(camera.point_of_view() - camera.position()) == camera.view_direction());
 }
 
-TEST_CASE("Factorial of 0 is 1 (fail)", "[single-file]")
+TEST_CASE("Camera position, view_direction", "[camera]")
 {
-    REQUIRE(Factorial(0) == 1);
+    Camera camera{};
+    SECTION("position")
+    {
+        const auto point = glm::vec3{1.0f, 2.0f, 3.0f};
+        camera.set_position(point);
+        REQUIRE(camera.position() == point);
+    }
+    SECTION("view_direction")
+    {
+        const auto point = glm::vec3{4.0f, 5.0f, 6.0f};
+        camera.set_view_direction(point);
+        REQUIRE(camera.view_direction() == glm::normalize(point));
+    }
 }
 
-TEST_CASE("Factorials of 1 and higher are computed (pass)", "[single-file]")
+TEST_CASE("Camera::look_at", "[camera]")
 {
-    REQUIRE(Factorial(1) == 1);
-    REQUIRE(Factorial(2) == 2);
-    REQUIRE(Factorial(3) == 6);
-    REQUIRE(Factorial(10) == 3628800);
+    Camera camera{};
+    const auto point_of_view = glm::vec3{1.0f, 2.0f, 3.0f};
+    camera.look_at(point_of_view);
+    REQUIRE(camera.point_of_view() == point_of_view);
+    REQUIRE(camera.view_direction() == glm::normalize(point_of_view));
+
+    SECTION("after set_position")
+    {
+        const auto position = glm::vec3{1.0f};
+        camera.set_position(position);
+        REQUIRE(camera.point_of_view() == camera.position() + camera.view_direction());
+
+        camera.look_at(point_of_view);
+        REQUIRE(camera.point_of_view() == point_of_view);
+        REQUIRE(camera.view_direction() == glm::normalize(point_of_view - position));
+    }
 }

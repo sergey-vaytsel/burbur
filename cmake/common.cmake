@@ -46,7 +46,7 @@ endfunction()
 function(add_burbur_test)
     set(options )
     set(one_value_keywords )
-    set(multi_value_keywords SOURCE_LIST)
+    set(multi_value_keywords SOURCE_LIST DEPS_LIST)
     cmake_parse_arguments(ADD_BURBUR_TEST "${options}" "${one_value_keywords}" "${multi_value_keywords}" ${ARGN})
 
     list(GET ADD_BURBUR_TEST_UNPARSED_ARGUMENTS 0 TEST_LIB)
@@ -56,6 +56,7 @@ function(add_burbur_test)
     target_link_libraries(${TEST_LIB}_test
         PRIVATE
             ${TEST_LIB}
+            ${ADD_BURBUR_TEST_DEPS_LIST}
 
             CONAN_PKG::catch2
             warnings
