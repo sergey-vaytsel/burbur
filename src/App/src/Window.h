@@ -12,12 +12,12 @@ public:
     ~Window();
 
     int init(unsigned width, unsigned height, const std::string &name);
-    bool shouldClose() const;
+    [[nodiscard]] bool shouldClose() const;
 
     void swapBuffers();
     void pollEvents();
 
-    std::tuple<std::uint16_t, std::uint16_t> size();
+    [[nodiscard]] std::tuple<std::uint16_t, std::uint16_t> size();
 
 private:
     GLFWwindow *_glfw_window_ptr;

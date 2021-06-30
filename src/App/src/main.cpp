@@ -100,7 +100,10 @@ int main(int, void **)
             (void *)0);
     }
 
-    camera.set_position(glm::vec3(.0f, -1.f, -5.0f));
+    camera.set_position(glm::vec3(.0f, 5.f, 5.0f));
+    camera.look_at(glm::vec3());
+
+    GLint mvp_location = glGetUniformLocation(program, "u_mat4_mvp");
 
     while (!window.shouldClose())
     {
@@ -116,10 +119,9 @@ int main(int, void **)
             glm::vec3(0.0f, 0.0f, 1.0f));
 
         glm::mat4x4 mvp = camera.view_projection() * model_matrix;
-        GLint mvp_location = glGetUniformLocation(program, "u_mat4_mvp");
         glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(mvp));
 
-        glDrawArrays(GL_LINES, 0, vertices_count);
+        glDrawArrays(GL_TRIANGLES, 0, vertices_count);
 
         window.swapBuffers();
         window.pollEvents();
