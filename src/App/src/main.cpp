@@ -37,7 +37,7 @@ int main(int, void **)
         return -1;
     }
 
-    Render render;
+    Render render{GLADloadproc(glfwGetProcAddress)};
     Camera camera;
 
     const auto program = []
@@ -70,9 +70,9 @@ int main(int, void **)
 
     Assimp::Importer model_importer;
     const auto model_filename = g_project_path / "test/models/AC/Wuson.ac";
-    const aiScene *model_scene_ptr = model_importer.ReadFile(
+    const auto model_scene_ptr = model_importer.ReadFile(
         model_filename.string(),
-        aiProcess_GenNormals);
+        aiProcess_Triangulate | aiProcess_GenNormals);
 
     if (model_scene_ptr == nullptr)
     {
@@ -110,26 +110,26 @@ int main(int, void **)
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_ids[0]);
         glBufferData(GL_ARRAY_BUFFER, vertices_size, vertices, GL_STATIC_DRAW);
 
+        glEnableVertexAttribArray(0);
         glVertexAttribPointer(
             0,
-            vertex_components_count,
+            static_cast<GLint>(vertex_components_count),
             GL_FLOAT,
             GL_FALSE,
             vertex_size,
             (void *)0);
-        glEnableVertexAttribArray(0);
 
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_ids[1]);
         glBufferData(GL_ARRAY_BUFFER, normals_size, normals, GL_STATIC_DRAW);
 
+        glEnableVertexAttribArray(1);
         glVertexAttribPointer(
             1,
-            normals_components_count,
+            static_cast<GLint>(normals_components_count),
             GL_FLOAT,
             GL_FALSE,
             normal_size,
             (void *)0);
-        glEnableVertexAttribArray(1);
     }
 
     const auto light_position = glm::vec3{5.0f, 5.0f, 1.0f};

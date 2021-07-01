@@ -34,8 +34,8 @@ int Window::init(unsigned width, unsigned height, const std::string &name)
         return -1;
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 
     _glfw_window_ptr = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
 
@@ -49,6 +49,8 @@ int Window::init(unsigned width, unsigned height, const std::string &name)
     glfwSwapInterval(1);
 
     glfwSetKeyCallback(_glfw_window_ptr, key_callback);
+
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
     return 0;
 }
