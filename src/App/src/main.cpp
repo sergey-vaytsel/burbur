@@ -40,7 +40,7 @@ int main(int, void **)
     Render render;
     Camera camera;
 
-    GLuint program = []
+    const auto program = []
     {
         const auto shader_path = g_project_path / "bin/shaders";
         auto vertex_shader_file_path = shader_path / "default.vsh";
@@ -58,13 +58,21 @@ int main(int, void **)
             .add_fragment_shader(file_content(std::move(fragment_shader_file_path)))
             .build();
     }();
+    const auto uniform_model_matrix_name = "u_mat4_model";
+    const auto uniform_view_matrix_name = "u_mat4_view";
+    const auto uniform_projection_matrix_name = "u_mat4_projection";
+
+    const auto uniform_light_position_name = "u_vec3_light_position";
+    const auto uniform_view_position_name = "u_vec3_view_position";
+    const auto uniform_light_color_name = "u_vec3_light_color";
+    const auto uniform_object_color_name = "u_vec3_object_color";
     glUseProgram(program);
 
     Assimp::Importer model_importer;
     const auto model_filename = g_project_path / "test/models/AC/Wuson.ac";
     const aiScene *model_scene_ptr = model_importer.ReadFile(
         model_filename.string(),
-        0);
+        aiProcess_GenNormals);
 
     if (model_scene_ptr == nullptr)
     {
@@ -80,30 +88,67 @@ int main(int, void **)
     const auto vertices_count = model_scene_ptr->mMeshes[0]->mNumVertices;
     const auto vertices_size = vertices_count * vertex_size;
 
+    const auto normals = model_scene_ptr->mMeshes[0]->mNormals;
+    const auto normal_size = sizeof(normals[0]);
+    const auto normals_count = vertices_count;
+    const auto normals_size = normals_count * normal_size;
+
     {
-        GLuint vertex_buffer_id;
-        glGenBuffers(1, &vertex_buffer_id);
-        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id);
-        glBufferData(GL_ARRAY_BUFFER, vertices_size, vertices, GL_STATIC_DRAW);
+        GLuint vertex_buffer_ids[2]; // vertices + normals
+        glGenBuffers(2, vertex_buffer_ids);
+
+        GLuint vertex_array_id;
+        glGenVertexArrays(1, &vertex_array_id);
+        glBindVertexArray(vertex_array_id);
 
         const auto vertex_component_size = sizeof(vertices[0].x);
         const auto vertex_components_count = vertex_size / vertex_component_size;
 
-        GLint vpos_location = glGetAttribLocation(program, "a_vec3_position");
-        glEnableVertexAttribArray(vpos_location);
+        const auto normals_component_size = sizeof(normals[0].x);
+        const auto normals_components_count = normals_size / normals_component_size;
+
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_ids[0]);
+        glBufferData(GL_ARRAY_BUFFER, vertices_size, vertices, GL_STATIC_DRAW);
+
         glVertexAttribPointer(
-            vpos_location,
+            0,
             vertex_components_count,
             GL_FLOAT,
             GL_FALSE,
             vertex_size,
             (void *)0);
+        glEnableVertexAttribArray(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_ids[1]);
+        glBufferData(GL_ARRAY_BUFFER, normals_size, normals, GL_STATIC_DRAW);
+
+        glVertexAttribPointer(
+            1,
+            normals_components_count,
+            GL_FLOAT,
+            GL_FALSE,
+            normal_size,
+            (void *)0);
+        glEnableVertexAttribArray(1);
     }
+
+    const auto light_position = glm::vec3{5.0f, 5.0f, 1.0f};
 
     camera.set_position(glm::vec3(.0f, 5.f, 5.0f));
     camera.look_at(glm::vec3());
 
-    GLint mvp_location = glGetUniformLocation(program, "u_mat4_mvp");
+    const auto uniform_light_position_location = glGetUniformLocation(program, uniform_light_position_name);
+    const auto uniform_light_color_location = glGetUniformLocation(program, uniform_light_color_name);
+    const auto uniform_object_color_location = glGetUniformLocation(program, uniform_object_color_name);
+
+    glUniform3f(uniform_light_position_location, light_position.x, light_position.y, light_position.z);
+    glUniform3f(uniform_light_color_location, 1.0f, 1.0f, 1.0f);
+    glUniform3f(uniform_object_color_location, 1.0f, 0.5f, 0.31f);
+
+    const auto uniform_model_matrix_location = glGetUniformLocation(program, uniform_model_matrix_name);
+    const auto uniform_view_matrix_location = glGetUniformLocation(program, uniform_view_matrix_name);
+    const auto uniform_projection_matrix_location = glGetUniformLocation(program, uniform_projection_matrix_name);
+    const auto uniform_view_position_location = glGetUniformLocation(program, uniform_view_position_name);
 
     while (!window.shouldClose())
     {
@@ -118,8 +163,12 @@ int main(int, void **)
             static_cast<GLfloat>(glfwGetTime()),
             glm::vec3(0.0f, 0.0f, 1.0f));
 
-        glm::mat4x4 mvp = camera.view_projection() * model_matrix;
-        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(mvp));
+        glUniformMatrix4fv(uniform_model_matrix_location, 1, GL_FALSE, glm::value_ptr(model_matrix));
+        glUniformMatrix4fv(uniform_view_matrix_location, 1, GL_FALSE, glm::value_ptr(camera.view()));
+        glUniformMatrix4fv(uniform_projection_matrix_location, 1, GL_FALSE, glm::value_ptr(camera.projection()));
+
+        const auto camera_position = camera.position();
+        glUniform3f(uniform_view_position_location, camera_position.x, camera_position.y, camera_position.z);
 
         glDrawArrays(GL_TRIANGLES, 0, vertices_count);
 

@@ -36,13 +36,14 @@ void Camera::set_aspect_ratio_if_needed(float aspect_ratio)
     }
 }
 
-const glm::mat4 &Camera::view_projection()
+const glm::mat4 &Camera::view()
 {
-    if (_need_recalculate_view_projection)
-    {
-        _view_projection_matrix = _projection_matrix * _view_matrix;
-    }
-    return _view_projection_matrix;
+    return _view_matrix;
+}
+
+const glm::mat4 &Camera::projection()
+{
+    return _projection_matrix;
 }
 
 const glm::vec3 &Camera::position()
@@ -63,16 +64,9 @@ const glm::vec3 &Camera::view_direction()
 void Camera::recalculate_projection()
 {
     _projection_matrix = glm::perspective(_vertical_fov_rad, _aspect_ratio, _near_plane, _far_plane);
-    need_recalculate_view_projection();
 }
 
 void Camera::recalculate_view()
 {
     _view_matrix = glm::lookAt(_position, _point_of_view, _up_direction);
-    need_recalculate_view_projection();
-}
-
-void Camera::need_recalculate_view_projection()
-{
-    _need_recalculate_view_projection = true;
 }

@@ -18,7 +18,8 @@ public:
     void look_at(const glm::vec3 &point_of_view, const glm::vec3 &up_direction = g_default_up_direction);
     void set_aspect_ratio_if_needed(float aspect_ratio);
 
-    [[nodiscard]] const glm::mat4 &view_projection();
+    [[nodiscard]] const glm::mat4 &view();
+    [[nodiscard]] const glm::mat4 &projection();
 
     [[nodiscard]] const glm::vec3 &position();
     [[nodiscard]] const glm::vec3 &point_of_view();
@@ -27,7 +28,6 @@ public:
 private:
     void recalculate_projection();
     void recalculate_view();
-    void need_recalculate_view_projection();
 
     glm::vec3 _position{0.0f};
     glm::vec3 _up_direction = glm::vec3{0.0f, 1.0f, 0.0f};
@@ -41,6 +41,4 @@ private:
 
     glm::mat4 _projection_matrix = glm::perspective(_vertical_fov_rad, _aspect_ratio, _near_plane, _far_plane);
     glm::mat4 _view_matrix{1.0f};
-    glm::mat4 _view_projection_matrix = _projection_matrix * _view_matrix;
-    bool _need_recalculate_view_projection = false;
 };
