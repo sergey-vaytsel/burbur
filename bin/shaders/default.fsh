@@ -5,7 +5,7 @@ in vec3 v_vec3_normal;
 in vec3 v_vec3_position;
   
 uniform vec3 u_vec3_light_position; 
-uniform vec3 u_vec3_view_position;
+uniform vec3 u_vec3_camera_position;
 uniform vec3 u_vec3_light_color;
 uniform vec3 u_vec3_object_color;
 
@@ -20,7 +20,7 @@ void main()
     vec3 diffuse_light_color = diffuse_strength * u_vec3_light_color;
     
     float specular_strength_factor = 0.5f;
-    vec3 view_direction = normalize(u_vec3_view_position - v_vec3_position);
+    vec3 view_direction = normalize(u_vec3_camera_position - v_vec3_position);
     vec3 reflect_direction = reflect(-light_direction, normal);  
     float specular_strength = pow(max(dot(view_direction, reflect_direction), 0.0), 32);
     vec3 specular_light_color = specular_strength_factor * specular_strength * u_vec3_light_color;  
