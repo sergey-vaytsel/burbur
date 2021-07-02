@@ -37,7 +37,12 @@ int Window::init(unsigned width, unsigned height, const std::string &name)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 
-    _glfw_window_ptr = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
+    _glfw_window_ptr = glfwCreateWindow(
+        static_cast<int>(width),
+        static_cast<int>(height),
+        name.c_str(),
+        nullptr,
+        nullptr);
 
     if (!_glfw_window_ptr)
     {
@@ -77,4 +82,4 @@ std::tuple<std::uint16_t, std::uint16_t> Window::size()
     return {
         static_cast<std::uint16_t>(width),
         static_cast<std::uint16_t>(height)};
-};
+}

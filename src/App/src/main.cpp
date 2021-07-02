@@ -27,7 +27,7 @@ namespace fs = std::filesystem;
 // {PROJECT_DIR}/build/src/App/App.exe
 const auto g_project_path = fs::current_path() / "../../..";
 
-int main(int, void **)
+int main(int, char **)
 {
     Window window{};
 
@@ -66,6 +66,10 @@ int main(int, void **)
     const auto uniform_view_position_name = "u_vec3_view_position";
     const auto uniform_light_color_name = "u_vec3_light_color";
     const auto uniform_object_color_name = "u_vec3_object_color";
+
+    const auto position_location = 0;
+    const auto normal_location = 1;
+
     glUseProgram(program);
 
     Assimp::Importer model_importer;
@@ -84,13 +88,13 @@ int main(int, void **)
     }
 
     const auto vertices = model_scene_ptr->mMeshes[0]->mVertices;
-    const auto vertex_size = sizeof(vertices[0]);
+    constexpr auto vertex_size = sizeof(vertices[0]);
     const auto vertices_count = model_scene_ptr->mMeshes[0]->mNumVertices;
     const auto vertices_size = vertices_count * vertex_size;
 
     const auto normals = model_scene_ptr->mMeshes[0]->mNormals;
-    const auto normal_size = sizeof(normals[0]);
-    const auto normals_count = vertices_count;
+    constexpr auto normal_size = sizeof(normals[0]);
+    const auto normals_count = model_scene_ptr->mMeshes[0]->mNumVertices;
     const auto normals_size = normals_count * normal_size;
 
     {
@@ -101,41 +105,40 @@ int main(int, void **)
         glGenVertexArrays(1, &vertex_array_id);
         glBindVertexArray(vertex_array_id);
 
-        const auto vertex_component_size = sizeof(vertices[0].x);
-        const auto vertex_components_count = vertex_size / vertex_component_size;
+        glEnableVertexAttribArray(position_location);
+        glEnableVertexAttribArray(normal_location);
 
-        const auto normals_component_size = sizeof(normals[0].x);
-        const auto normals_components_count = normals_size / normals_component_size;
+        constexpr auto vertex_component_size = sizeof(vertices[0].x);
+        constexpr auto vertex_components_count = vertex_size / vertex_component_size;
+
+        constexpr auto normals_component_size = sizeof(normals[0].x);
+        constexpr auto normals_components_count = normal_size / normals_component_size;
 
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_ids[0]);
-        glBufferData(GL_ARRAY_BUFFER, vertices_size, vertices, GL_STATIC_DRAW);
-
-        glEnableVertexAttribArray(0);
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertices_size), vertices, GL_STATIC_DRAW);
         glVertexAttribPointer(
-            0,
+            position_location,
             static_cast<GLint>(vertex_components_count),
             GL_FLOAT,
             GL_FALSE,
             vertex_size,
-            (void *)0);
+            static_cast<void *>(0));
 
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_ids[1]);
-        glBufferData(GL_ARRAY_BUFFER, normals_size, normals, GL_STATIC_DRAW);
-
-        glEnableVertexAttribArray(1);
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(normals_size), normals, GL_STATIC_DRAW);
         glVertexAttribPointer(
-            1,
+            normal_location,
             static_cast<GLint>(normals_components_count),
             GL_FLOAT,
             GL_FALSE,
             normal_size,
-            (void *)0);
+            static_cast<void *>(0));
     }
 
     const auto light_position = glm::vec3{5.0f, 5.0f, 1.0f};
 
-    camera.set_position(glm::vec3(.0f, 5.f, 5.0f));
-    camera.look_at(glm::vec3());
+    camera.set_position(glm::vec3(0.0f, 0.0f, 5.0f));
+    camera.look_at(glm::vec3(0.0f, 0.5f, 0.0f));
 
     const auto uniform_light_position_location = glGetUniformLocation(program, uniform_light_position_name);
     const auto uniform_light_color_location = glGetUniformLocation(program, uniform_light_color_name);
@@ -158,8 +161,13 @@ int main(int, void **)
         camera.set_aspect_ratio_if_needed(ratio);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-        glm::mat4x4 model_matrix = glm::rotate(
-            glm::mat4(1.0f),
+        auto model_matrix = glm::mat4(1.0f);
+        model_matrix = glm::rotate(
+            model_matrix,
+            std::numbers::pi_v<float> / 2,
+            glm::vec3(1.0f, 0.0f, 0.0f));
+        model_matrix = glm::rotate(
+            model_matrix,
             static_cast<GLfloat>(glfwGetTime()),
             glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -170,7 +178,7 @@ int main(int, void **)
         const auto camera_position = camera.position();
         glUniform3f(uniform_view_position_location, camera_position.x, camera_position.y, camera_position.z);
 
-        glDrawArrays(GL_TRIANGLES, 0, vertices_count);
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices_count));
 
         window.swapBuffers();
         window.pollEvents();
