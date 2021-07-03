@@ -4,11 +4,14 @@ set(SRC_LIST
     Camera.h
     Render.h
     Scene.h
+    Shader.h
+    Shader.inl
     ShaderProgramBuilder.h
 
     src/Camera.cpp
     src/Render.cpp
     src/Scene.cpp
+    src/Shader.cpp
     src/ShaderProgramBuilder.cpp
 )
 

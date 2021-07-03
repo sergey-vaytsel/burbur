@@ -18,7 +18,7 @@
 
 #include <Render/Camera.h>
 #include <Render/Render.h>
-#include <Render/ShaderProgramBuilder.h>
+#include <Render/Shader.h>
 
 #include "Window.h"
 
@@ -39,47 +39,14 @@ int main(int, char **)
 
     Render render{GLADloadproc(glfwGetProcAddress)};
     Camera camera;
-
-    const auto program = []
+    auto shader = []
     {
         const auto shader_path = g_project_path / "bin/shaders";
-        auto vertex_shader_file_path = shader_path / "default.vsh";
-        auto fragment_shader_file_path = shader_path / "default.fsh";
-
-        const auto file_content = [](fs::path &&path) -> std::string
-        {
-            std::stringstream stream;
-            std::ifstream(path) >> stream.rdbuf();
-            return stream.str();
-        };
-
-        return ShaderProgramBuilder()
-            .add_vertex_shader(file_content(std::move(vertex_shader_file_path)))
-            .add_fragment_shader(file_content(std::move(fragment_shader_file_path)))
-            .build();
+        const auto vertex_shader_file_path = shader_path / "default.vsh";
+        const auto fragment_shader_file_path = shader_path / "default.fsh";
+        return DefaultShader(vertex_shader_file_path, fragment_shader_file_path);
     }();
-    const auto uniform_model_matrix_name = "u_mat4_model";
-    const auto uniform_view_matrix_name = "u_mat4_view";
-    const auto uniform_projection_matrix_name = "u_mat4_projection";
-
-    const auto uniform_light_position_name = "u_vec3_light_position";
-    const auto uniform_camera_position_name = "u_vec3_camera_position";
-    const auto uniform_light_color_name = "u_vec3_light_color";
-    const auto uniform_object_color_name = "u_vec3_object_color";
-
-    const auto attribute_position_location = 0;
-    const auto attribute_normal_location = 1;
-
-    glUseProgram(program);
-
-    const auto uniform_light_position_location = glGetUniformLocation(program, uniform_light_position_name);
-    const auto uniform_light_color_location = glGetUniformLocation(program, uniform_light_color_name);
-    const auto uniform_object_color_location = glGetUniformLocation(program, uniform_object_color_name);
-
-    const auto uniform_model_matrix_location = glGetUniformLocation(program, uniform_model_matrix_name);
-    const auto uniform_view_matrix_location = glGetUniformLocation(program, uniform_view_matrix_name);
-    const auto uniform_projection_matrix_location = glGetUniformLocation(program, uniform_projection_matrix_name);
-    const auto uniform_camera_position_location = glGetUniformLocation(program, uniform_camera_position_name);
+    shader.use();
 
     Assimp::Importer model_importer;
     const auto model_filename = g_project_path / "test/models/AC/Wuson.ac";
@@ -114,6 +81,8 @@ int main(int, char **)
         glGenVertexArrays(1, &vertex_array_id);
         glBindVertexArray(vertex_array_id);
 
+        const auto attribute_position_location = shader.location(Attribute::POSITION_VEC3);
+        const auto attribute_normal_location = shader.location(Attribute::NORMAL_VEC3);
         glEnableVertexAttribArray(attribute_position_location);
         glEnableVertexAttribArray(attribute_normal_location);
 
@@ -150,9 +119,9 @@ int main(int, char **)
     camera.set_position(glm::vec3(0.0f, 0.0f, 5.0f));
     camera.look_at(glm::vec3(0.0f, 0.5f, 0.0f));
 
-    glUniform3f(uniform_light_position_location, light_position.x, light_position.y, light_position.z);
-    glUniform3f(uniform_light_color_location, light_color.x, light_color.y, light_color.z);
-    glUniform3f(uniform_object_color_location, object_color.x, object_color.y, object_color.z);
+    shader.set_uniform(Uniform::LIGHT_POS_VEC3, light_position);
+    shader.set_uniform(Uniform::LIGHT_COLOR_VEC3, light_color);
+    shader.set_uniform(Uniform::OBJECT_COLOR_VEC3, object_color);
 
     while (!window.shouldClose())
     {
@@ -171,12 +140,11 @@ int main(int, char **)
             model_matrix,
             static_cast<GLfloat>(glfwGetTime()),
             glm::vec3(0.0f, 0.0f, 1.0f));
-
-        glUniformMatrix4fv(uniform_model_matrix_location, 1, GL_FALSE, glm::value_ptr(model_matrix));
-        glUniformMatrix4fv(uniform_view_matrix_location, 1, GL_FALSE, glm::value_ptr(camera.view()));
-        glUniformMatrix4fv(uniform_projection_matrix_location, 1, GL_FALSE, glm::value_ptr(camera.projection()));
+        shader.set_uniform(Uniform::MODEL_MATRIX, model_matrix);
+        shader.set_uniform(Uniform::VIEW_MATRIX, camera.view());
+        shader.set_uniform(Uniform::PROJECTION_MATRIX, camera.projection());
         const auto camera_position = camera.position();
-        glUniform3f(uniform_camera_position_location, camera_position.x, camera_position.y, camera_position.z);
+        shader.set_uniform(Uniform::CAMERA_POS_VEC3, camera_position);
 
         glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices_count));
 
