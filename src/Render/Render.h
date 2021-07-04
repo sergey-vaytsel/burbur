@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <glad/glad.h>
 
-class Render
+class Render final
 {
 public:
     Render(GLADloadproc glad_load_procedure);

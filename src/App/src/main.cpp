@@ -6,7 +6,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -19,6 +18,7 @@
 #include <Render/Camera.h>
 #include <Render/Render.h>
 #include <Render/Shader.h>
+#include <Model/Model.h>
 
 #include "Window.h"
 
@@ -63,17 +63,17 @@ int main(int, char **)
         return -1;
     }
 
-    const auto vertices = model_scene_ptr->mMeshes[0]->mVertices;
-    constexpr auto vertex_size = sizeof(vertices[0]);
     const auto vertices_count = model_scene_ptr->mMeshes[0]->mNumVertices;
-    const auto vertices_size = vertices_count * vertex_size;
-
-    const auto normals = model_scene_ptr->mMeshes[0]->mNormals;
-    constexpr auto normal_size = sizeof(normals[0]);
-    const auto normals_count = model_scene_ptr->mMeshes[0]->mNumVertices;
-    const auto normals_size = normals_count * normal_size;
-
     {
+        const auto vertices = model_scene_ptr->mMeshes[0]->mVertices;
+        constexpr auto vertex_size = sizeof(vertices[0]);
+        const auto vertices_size = vertices_count * vertex_size;
+
+        const auto normals = model_scene_ptr->mMeshes[0]->mNormals;
+        constexpr auto normal_size = sizeof(normals[0]);
+        const auto normals_count = model_scene_ptr->mMeshes[0]->mNumVertices;
+        const auto normals_size = normals_count * normal_size;
+
         GLuint vertex_buffer_ids[2];
         glGenBuffers(2, vertex_buffer_ids);
 
@@ -86,10 +86,8 @@ int main(int, char **)
         glEnableVertexAttribArray(attribute_position_location);
         glEnableVertexAttribArray(attribute_normal_location);
 
-        constexpr auto vertex_component_size = sizeof(vertices[0].x);
-        constexpr auto vertex_components_count = vertex_size / vertex_component_size;
-        constexpr auto normals_component_size = sizeof(normals[0].x);
-        constexpr auto normals_components_count = normal_size / normals_component_size;
+        constexpr auto vertex_components_count = vertex_size / sizeof(vertices[0].x);
+        constexpr auto normal_components_count = normal_size / sizeof(normals[0].x);
 
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_ids[0]);
         glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertices_size), vertices, GL_STATIC_DRAW);
@@ -105,7 +103,7 @@ int main(int, char **)
         glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(normals_size), normals, GL_STATIC_DRAW);
         glVertexAttribPointer(
             attribute_normal_location,
-            static_cast<GLint>(normals_components_count),
+            static_cast<GLint>(normal_components_count),
             GL_FLOAT,
             GL_FALSE,
             normal_size,

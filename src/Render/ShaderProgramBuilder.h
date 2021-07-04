@@ -3,7 +3,7 @@
 #include <optional>
 #include <string>
 
-class ShaderProgramBuilder
+class ShaderProgramBuilder final
 {
 public:
     ShaderProgramBuilder &add_fragment_shader(std::string &&text);

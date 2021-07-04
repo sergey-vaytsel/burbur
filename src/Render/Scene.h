@@ -4,9 +4,9 @@ class Node
 {
 };
 
-class Light : public Node
+class LightNode final : public Node
 {
 };
-class Scene : public Node
+class SceneNode final : public Node
 {
 };
