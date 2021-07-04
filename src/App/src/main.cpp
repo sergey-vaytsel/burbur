@@ -48,30 +48,18 @@ int main(int, char **)
     }();
     shader.use();
 
-    Assimp::Importer model_importer;
-    const auto model_filename = g_project_path / "test/models/AC/Wuson.ac";
-    const auto model_scene_ptr = model_importer.ReadFile(
-        model_filename.string(),
-        aiProcess_Triangulate | aiProcess_GenNormals);
+    Model model{g_project_path / "test/models/AC/Wuson.ac"};
 
-    if (model_scene_ptr == nullptr)
+    const auto &mesh = model.meshes()[0];
+    const auto vertices_count = mesh.vertices.size();
     {
-        std::cout << fmt::format(
-            "Import model '{}' error: {}",
-            model_filename.string(),
-            model_importer.GetErrorString());
-        return -1;
-    }
-
-    const auto vertices_count = model_scene_ptr->mMeshes[0]->mNumVertices;
-    {
-        const auto vertices = model_scene_ptr->mMeshes[0]->mVertices;
+        const auto vertices = mesh.vertices;
         constexpr auto vertex_size = sizeof(vertices[0]);
         const auto vertices_size = vertices_count * vertex_size;
 
-        const auto normals = model_scene_ptr->mMeshes[0]->mNormals;
+        const auto normals = mesh.normals;
         constexpr auto normal_size = sizeof(normals[0]);
-        const auto normals_count = model_scene_ptr->mMeshes[0]->mNumVertices;
+        const auto normals_count = normals.size();
         const auto normals_size = normals_count * normal_size;
 
         GLuint vertex_buffer_ids[2];
@@ -90,7 +78,7 @@ int main(int, char **)
         constexpr auto normal_components_count = normal_size / sizeof(normals[0].x);
 
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_ids[0]);
-        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertices_size), vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertices_size), vertices.data(), GL_STATIC_DRAW);
         glVertexAttribPointer(
             attribute_position_location,
             static_cast<GLint>(vertex_components_count),
@@ -100,7 +88,7 @@ int main(int, char **)
             static_cast<void *>(0));
 
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_ids[1]);
-        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(normals_size), normals, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(normals_size), normals.data(), GL_STATIC_DRAW);
         glVertexAttribPointer(
             attribute_normal_location,
             static_cast<GLint>(normal_components_count),
