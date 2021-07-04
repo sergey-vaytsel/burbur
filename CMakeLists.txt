@@ -34,4 +34,5 @@ conan_cmake_run(
 enable_testing ()
 
 add_subdirectory(src/App)
+add_subdirectory(src/Model)
 add_subdirectory(src/Render)
