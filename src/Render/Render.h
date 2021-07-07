@@ -3,11 +3,17 @@
 #include <cstdint>
 #include <glad/glad.h>
 
-class Render final
+#include <Render/Scene.h>
+
+class Renderer final
 {
 public:
-    Render(GLADloadproc glad_load_procedure);
+    Renderer(GLADloadproc glad_load_procedure);
     void update_viewport_size_if_needed(std::uint16_t width, std::uint16_t height);
+
+    void bind(const Node &node);
+    void draw(const Node &node);
+    void draw(const Scene &scene);
 
 private:
     std::uint16_t _width = 0;

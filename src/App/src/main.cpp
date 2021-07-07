@@ -33,7 +33,7 @@ int main(int, char **)
         return -1;
     }
 
-    Render render{GLADloadproc(glfwGetProcAddress)};
+    Renderer render{GLADloadproc(glfwGetProcAddress)};
     Camera camera;
     auto shader = []
     {
@@ -44,7 +44,7 @@ int main(int, char **)
     }();
     shader.use();
 
-    Model model{g_project_path / "test/models/AC/Wuson.ac"};
+    model::Model model{g_project_path / "test/models/AC/Wuson.ac"};
 
     const auto &mesh = model.meshes()[0];
     const auto vertices_count = mesh.vertices.size();

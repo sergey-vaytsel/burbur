@@ -32,7 +32,7 @@ inline namespace
 
 }
 
-Render::Render(GLADloadproc glad_load_procedure)
+Renderer::Renderer(GLADloadproc glad_load_procedure)
 {
     gladLoadGLLoader(glad_load_procedure);
 
@@ -47,7 +47,7 @@ Render::Render(GLADloadproc glad_load_procedure)
     glDebugMessageCallback(gl_message_callback, 0);
 }
 
-void Render::update_viewport_size_if_needed(std::uint16_t width, std::uint16_t height)
+void Renderer::update_viewport_size_if_needed(std::uint16_t width, std::uint16_t height)
 {
     if (width == _width && height == _height)
     {
