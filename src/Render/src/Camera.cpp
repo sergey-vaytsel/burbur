@@ -63,7 +63,8 @@ const glm::vec3 &Camera::view_direction()
 
 void Camera::recalculate_projection()
 {
-    _projection_matrix = glm::perspective(_vertical_fov_rad, _aspect_ratio, _near_plane, _far_plane);
+    _projection_matrix =
+        glm::perspective(_vertical_fov_rad, _aspect_ratio, _near_plane, _far_plane);
 }
 
 void Camera::recalculate_view()

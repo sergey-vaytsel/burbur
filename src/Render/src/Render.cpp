@@ -1,36 +1,36 @@
 #include <Render/Render.h>
 
-#include <numbers>
 #include <iostream>
+#include <numbers>
 
-#include <glad/glad.h>
 #include <fmt/format.h>
+#include <glad/glad.h>
 
 inline namespace
 {
-    void GLAPIENTRY gl_message_callback(GLenum source,
-                                        GLenum type,
-                                        GLuint id,
-                                        GLenum severity,
-                                        GLsizei length,
-                                        const GLchar *message,
-                                        const void *userParam)
+void GLAPIENTRY gl_message_callback(GLenum source,
+                                    GLenum type,
+                                    GLuint id,
+                                    GLenum severity,
+                                    GLsizei length,
+                                    const GLchar *message,
+                                    const void *userParam)
+{
+    (void)source;
+    (void)id;
+    (void)severity;
+    (void)userParam;
+
+    if (type != GL_DEBUG_TYPE_ERROR)
     {
-        (void)source;
-        (void)id;
-        (void)severity;
-        (void)userParam;
-
-        if (type != GL_DEBUG_TYPE_ERROR)
-        {
-            return;
-        }
-
-        std::cerr << fmt::format("GL CALLBACK: {}\n",
-                                 std::string{message, static_cast<size_t>(length)});
+        return;
     }
 
+    std::cerr << fmt::format("GL CALLBACK: {}\n",
+                             std::string{message, static_cast<size_t>(length)});
 }
+
+} // namespace
 
 Renderer::Renderer(GLADloadproc glad_load_procedure)
 {

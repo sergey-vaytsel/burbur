@@ -1,13 +1,13 @@
 #include <Render/Shader.h>
 #include <Render/ShaderProgramBuilder.h>
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
-DefaultShader::DefaultShader(const fs::path &vertex_shader_file_path, const fs::path &fragment_shader_file_path)
+DefaultShader::DefaultShader(const fs::path &vertex_shader_file_path,
+                             const fs::path &fragment_shader_file_path)
 {
-    const auto file_content = [](const fs::path &path) -> std::string
-    {
+    const auto file_content = [](const fs::path &path) -> std::string {
         std::stringstream stream;
         std::ifstream(path) >> stream.rdbuf();
         return stream.str();
@@ -59,10 +59,12 @@ IShader::UniformLocations DefaultShader::uniform_locations()
         cached_uniform_locations = {{
             {Uniform::MODEL_MATRIX, glGetUniformLocation(_program, uniform_model_matrix_name)},
             {Uniform::VIEW_MATRIX, glGetUniformLocation(_program, uniform_view_matrix_name)},
-            {Uniform::PROJECTION_MATRIX, glGetUniformLocation(_program, uniform_projection_matrix_name)},
+            {Uniform::PROJECTION_MATRIX,
+             glGetUniformLocation(_program, uniform_projection_matrix_name)},
             {Uniform::LIGHT_POS_VEC3, glGetUniformLocation(_program, uniform_light_position_name)},
             {Uniform::LIGHT_COLOR_VEC3, glGetUniformLocation(_program, uniform_light_color_name)},
-            {Uniform::CAMERA_POS_VEC3, glGetUniformLocation(_program, uniform_camera_position_name)},
+            {Uniform::CAMERA_POS_VEC3,
+             glGetUniformLocation(_program, uniform_camera_position_name)},
             {Uniform::OBJECT_COLOR_VEC3, glGetUniformLocation(_program, uniform_object_color_name)},
         }};
     }

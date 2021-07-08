@@ -6,18 +6,18 @@
 inline namespace
 {
 
-    void error_callback(const int error, const char *const description)
-    {
-        std::cerr << fmt::format("Error (Code={}): {}", error, description) << std::endl;
-    }
+void error_callback(const int error, const char *const description)
+{
+    std::cerr << fmt::format("Error (Code={}): {}", error, description) << std::endl;
+}
 
-    void key_callback(GLFWwindow *const window, const int key, const int, const int action, const int)
-    {
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
-    }
+void key_callback(GLFWwindow *const window, const int key, const int, const int action, const int)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+}
 
-} // inline namespace
+} // namespace
 
 Window::~Window()
 {
@@ -37,12 +37,11 @@ int Window::init(unsigned width, unsigned height, const std::string &name)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 
-    _glfw_window_ptr = glfwCreateWindow(
-        static_cast<int>(width),
-        static_cast<int>(height),
-        name.c_str(),
-        nullptr,
-        nullptr);
+    _glfw_window_ptr = glfwCreateWindow(static_cast<int>(width),
+                                        static_cast<int>(height),
+                                        name.c_str(),
+                                        nullptr,
+                                        nullptr);
 
     if (!_glfw_window_ptr)
     {
@@ -79,7 +78,5 @@ std::tuple<std::uint16_t, std::uint16_t> Window::size()
 {
     int width, height;
     glfwGetFramebufferSize(_glfw_window_ptr, &width, &height);
-    return {
-        static_cast<std::uint16_t>(width),
-        static_cast<std::uint16_t>(height)};
+    return {static_cast<std::uint16_t>(width), static_cast<std::uint16_t>(height)};
 }

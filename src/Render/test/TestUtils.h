@@ -1,5 +1,7 @@
 #pragma once
+
 #include <ostream>
+
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <optional>
 #include <cstddef>
+#include <optional>
 #include <vector>
 
 #include <glm/glm.hpp>

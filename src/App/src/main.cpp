@@ -1,8 +1,7 @@
-#include <numbers>
-
-#include <iostream>
-#include <fstream>
 #include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <numbers>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -11,10 +10,10 @@
 
 #include <glad/glad.h>
 
+#include <Model/Model.h>
 #include <Render/Camera.h>
 #include <Render/Render.h>
 #include <Render/Shader.h>
-#include <Model/Model.h>
 
 #include "Window.h"
 
@@ -35,8 +34,7 @@ int main(int, char **)
 
     Renderer render{GLADloadproc(glfwGetProcAddress)};
     Camera camera;
-    auto shader = []
-    {
+    auto shader = [] {
         const auto shader_path = g_project_path / "bin/shaders";
         const auto vertex_shader_file_path = shader_path / "default.vsh";
         const auto fragment_shader_file_path = shader_path / "default.fsh";
@@ -74,24 +72,28 @@ int main(int, char **)
         constexpr auto normal_components_count = normal_size / sizeof(normals[0].x);
 
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_ids[0]);
-        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertices_size), vertices.data(), GL_STATIC_DRAW);
-        glVertexAttribPointer(
-            attribute_position_location,
-            static_cast<GLint>(vertex_components_count),
-            GL_FLOAT,
-            GL_FALSE,
-            vertex_size,
-            static_cast<void *>(0));
+        glBufferData(GL_ARRAY_BUFFER,
+                     static_cast<GLsizeiptr>(vertices_size),
+                     vertices.data(),
+                     GL_STATIC_DRAW);
+        glVertexAttribPointer(attribute_position_location,
+                              static_cast<GLint>(vertex_components_count),
+                              GL_FLOAT,
+                              GL_FALSE,
+                              vertex_size,
+                              static_cast<void *>(0));
 
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_ids[1]);
-        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(normals_size), normals.data(), GL_STATIC_DRAW);
-        glVertexAttribPointer(
-            attribute_normal_location,
-            static_cast<GLint>(normal_components_count),
-            GL_FLOAT,
-            GL_FALSE,
-            normal_size,
-            static_cast<void *>(0));
+        glBufferData(GL_ARRAY_BUFFER,
+                     static_cast<GLsizeiptr>(normals_size),
+                     normals.data(),
+                     GL_STATIC_DRAW);
+        glVertexAttribPointer(attribute_normal_location,
+                              static_cast<GLint>(normal_components_count),
+                              GL_FLOAT,
+                              GL_FALSE,
+                              normal_size,
+                              static_cast<void *>(0));
     }
 
     const auto light_position = glm::vec3{5.0f, 5.0f, 1.0f};
@@ -114,14 +116,11 @@ int main(int, char **)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         auto model_matrix = glm::mat4(1.0f);
-        model_matrix = glm::rotate(
-            model_matrix,
-            std::numbers::pi_v<float> / 2,
-            glm::vec3(1.0f, 0.0f, 0.0f));
-        model_matrix = glm::rotate(
-            model_matrix,
-            static_cast<GLfloat>(glfwGetTime()),
-            glm::vec3(0.0f, 0.0f, 1.0f));
+        model_matrix =
+            glm::rotate(model_matrix, std::numbers::pi_v<float> / 2, glm::vec3(1.0f, 0.0f, 0.0f));
+        model_matrix = glm::rotate(model_matrix,
+                                   static_cast<GLfloat>(glfwGetTime()),
+                                   glm::vec3(0.0f, 0.0f, 1.0f));
         shader.set_uniform(Uniform::MODEL_MATRIX, model_matrix);
         shader.set_uniform(Uniform::VIEW_MATRIX, camera.view());
         shader.set_uniform(Uniform::PROJECTION_MATRIX, camera.projection());

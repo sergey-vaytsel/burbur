@@ -18,8 +18,7 @@ ShaderProgramBuilder &ShaderProgramBuilder::add_vertex_shader(std::string &&text
 
 GLuint ShaderProgramBuilder::build()
 {
-    auto vertex_shader = [this]() -> GLuint
-    {
+    auto vertex_shader = [this]() -> GLuint {
         if (_vertex_shader_text)
         {
             GLuint vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
@@ -31,8 +30,7 @@ GLuint ShaderProgramBuilder::build()
         throw std::runtime_error("ShaderProgramBuilder::build() : no vertex shader text added.");
     }();
 
-    auto fragment_shader = [this]() -> GLuint
-    {
+    auto fragment_shader = [this]() -> GLuint {
         if (_fragment_shader_text)
         {
             GLuint fragment_shader_id = glCreateShader(GL_FRAGMENT_SHADER);

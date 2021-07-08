@@ -1,8 +1,8 @@
 #pragma once
 
+#include <filesystem>
 #include <optional>
 #include <unordered_map>
-#include <filesystem>
 
 #include <glad/glad.h>
 
@@ -53,7 +53,8 @@ class DefaultShader final : public IShader
 {
 public:
     //! todo
-    DefaultShader(const fs::path &vertex_shader_file_path, const fs::path &fragment_shader_file_path);
+    DefaultShader(const fs::path &vertex_shader_file_path,
+                  const fs::path &fragment_shader_file_path);
     ~DefaultShader();
 
     [[nodiscard]] AttributeLocations attribute_locations();
