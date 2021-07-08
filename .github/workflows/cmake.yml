@@ -1,44 +1,78 @@
-name: CMake
-
+name: CI
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-
 jobs:
-  build:
-    # The CMake configure and build commands are platform agnostic and should work equally
-    # well on Windows or Mac.  You can convert this to a matrix build if you need
-    # cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+  build-ubuntu-gcc:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
-    
-    - name: Install packages
+    - name: Install dependencies
       run: sudo apt install -y libgl-dev
-    
     - name: Get Conan
       uses: turtlebrowser/get-conan@v1.0
-
     - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: CXX="g++-10" CC="gcc-10" cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      env:
+        CXX: g++-10
+        CC: gcc-10
     - name: Build
-      # Build your program with the given configuration
-      run: CXX="g++-10" CC="gcc-10" cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      env:
+        CXX: g++-10
+        CC: gcc-10
     - name: Test
       working-directory: ${{github.workspace}}/build
-      # Execute tests defined by the CMake configuration.  
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest -C ${{env.BUILD_TYPE}}
-      
+  build-ubuntu-clang:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: sudo apt install -y libgl-dev
+    - name: Get Conan
+      uses: turtlebrowser/get-conan@v1.0
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      env:
+        CXX: clang++
+        CC: clang
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      env:
+        CXX: clang++
+        CC: clang
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{env.BUILD_TYPE}}
+  build-macos:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: brew install libgl-dev
+    - name: Get Conan
+      uses: turtlebrowser/get-conan@v1.0
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      env:
+        CXX: clang++
+        CC: clang
+  build-windows-msvc:
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v2
+    - uses: seanmiddleditch/gha-setup-vsdevenv@master
+    - name: Get Conan
+      uses: turtlebrowser/get-conan@v1.0
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{env.BUILD_TYPE}}
