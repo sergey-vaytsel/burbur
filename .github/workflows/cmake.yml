@@ -53,8 +53,6 @@ jobs:
     runs-on: macOS-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: brew install libgl-dev
     - name: Get Conan
       uses: turtlebrowser/get-conan@v1.0
     - name: Configure CMake
