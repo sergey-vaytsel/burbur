@@ -113,19 +113,19 @@ int main(int, char **)
         auto ratio = static_cast<float>(width) / height;
         render.update_viewport_size_if_needed(width, height);
         camera.set_aspect_ratio_if_needed(ratio);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        render.clear();
 
-        auto model_matrix = glm::mat4(1.0f);
-        model_matrix =
-            glm::rotate(model_matrix, std::numbers::pi_v<float> / 2, glm::vec3(1.0f, 0.0f, 0.0f));
-        model_matrix = glm::rotate(model_matrix,
-                                   static_cast<GLfloat>(glfwGetTime()),
-                                   glm::vec3(0.0f, 0.0f, 1.0f));
+        auto model_matrix = [] {
+            auto res = glm::mat4(1.0f);
+            res = glm::rotate(res, std::numbers::pi_v<float> / 2, glm::vec3(1.0f, 0.0f, 0.0f));
+            res =
+                glm::rotate(res, static_cast<GLfloat>(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
+            return res;
+        }();
         shader.set_uniform(render::Uniform::MODEL_MATRIX, model_matrix);
         shader.set_uniform(render::Uniform::VIEW_MATRIX, camera.view());
         shader.set_uniform(render::Uniform::PROJECTION_MATRIX, camera.projection());
-        const auto camera_position = camera.position();
-        shader.set_uniform(render::Uniform::CAMERA_POS_VEC3, camera_position);
+        shader.set_uniform(render::Uniform::CAMERA_POS_VEC3, camera.position());
 
         glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices_count));
 

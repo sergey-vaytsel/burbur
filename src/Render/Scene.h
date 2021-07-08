@@ -35,8 +35,8 @@ public:
     void set_rotations(glm::vec3 rotations);
 
     void add_child(Node node);
-    const Node &parent();
-    const std::vector<std::reference_wrapper<Node>> &children();
+    [[nodiscard]] const Node &parent();
+    [[nodiscard]] const std::vector<std::reference_wrapper<Node>> &children();
 
 private:
     std::reference_wrapper<Scene> _scene;

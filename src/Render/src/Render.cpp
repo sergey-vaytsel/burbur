@@ -59,4 +59,9 @@ void Renderer::update_viewport_size_if_needed(std::uint16_t width, std::uint16_t
     glViewport(0, 0, width, height);
 }
 
+void Renderer::clear()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+}
+
 } // namespace render
