@@ -5,6 +5,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+namespace render
+{
+
 const auto g_default_view_direction = glm::vec3(0.0f, 0.0f, 1.0f);
 const auto g_default_up_direction = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -44,3 +47,5 @@ private:
         glm::perspective(_vertical_fov_rad, _aspect_ratio, _near_plane, _far_plane);
     glm::mat4 _view_matrix{1.0f};
 };
+
+} // namespace render

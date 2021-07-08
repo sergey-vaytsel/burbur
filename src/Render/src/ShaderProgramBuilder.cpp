@@ -4,6 +4,9 @@
 
 #include <glad/glad.h>
 
+namespace render
+{
+
 ShaderProgramBuilder &ShaderProgramBuilder::add_fragment_shader(std::string &&text)
 {
     _fragment_shader_text = std::move(text);
@@ -51,3 +54,5 @@ GLuint ShaderProgramBuilder::build()
 
     return program;
 }
+
+} // namespace render

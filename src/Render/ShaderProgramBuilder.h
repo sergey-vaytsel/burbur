@@ -3,6 +3,9 @@
 #include <optional>
 #include <string>
 
+namespace render
+{
+
 class ShaderProgramBuilder final
 {
 public:
@@ -15,3 +18,5 @@ private:
     std::optional<std::string> _vertex_shader_text = std::nullopt;
     std::optional<std::string> _fragment_shader_text = std::nullopt;
 };
+
+} // namespace render

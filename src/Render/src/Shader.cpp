@@ -4,6 +4,9 @@
 #include <fstream>
 #include <iostream>
 
+namespace render
+{
+
 DefaultShader::DefaultShader(const fs::path &vertex_shader_file_path,
                              const fs::path &fragment_shader_file_path)
 {
@@ -93,3 +96,5 @@ IShader::UniformLocation DefaultShader::location(Uniform uniform)
     }
     return cached_uniform_locations->at(uniform);
 }
+
+} // namespace render

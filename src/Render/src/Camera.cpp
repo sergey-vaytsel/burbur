@@ -4,6 +4,9 @@
 
 #include <glm/gtx/vector_angle.hpp>
 
+namespace render
+{
+
 void Camera::set_position(const glm::vec3 &position)
 {
     _position = position;
@@ -71,3 +74,5 @@ void Camera::recalculate_view()
 {
     _view_matrix = glm::lookAt(_position, _point_of_view, _up_direction);
 }
+
+} // namespace render

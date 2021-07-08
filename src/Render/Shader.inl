@@ -5,6 +5,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+namespace render
+{
+
 template <typename Type>
 void IShader::set_uniform(Uniform uniform, const Type &value)
 {
@@ -21,3 +24,5 @@ void IShader::set_uniform(Uniform uniform, const Type &value)
         std::cerr << "set_uniform unsupported type";
     }
 }
+
+} // namespace render

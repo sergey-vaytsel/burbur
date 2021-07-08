@@ -5,6 +5,9 @@
 
 #include <Render/Scene.h>
 
+namespace render
+{
+
 class Renderer final
 {
 public:
@@ -19,3 +22,5 @@ private:
     std::uint16_t _width = 0;
     std::uint16_t _height = 0;
 };
+
+} // namespace render

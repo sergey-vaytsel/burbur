@@ -32,13 +32,13 @@ int main(int, char **)
         return -1;
     }
 
-    Renderer render{GLADloadproc(glfwGetProcAddress)};
-    Camera camera;
+    render::Renderer render{GLADloadproc(glfwGetProcAddress)};
+    render::Camera camera;
     auto shader = [] {
         const auto shader_path = g_project_path / "bin/shaders";
         const auto vertex_shader_file_path = shader_path / "default.vsh";
         const auto fragment_shader_file_path = shader_path / "default.fsh";
-        return DefaultShader(vertex_shader_file_path, fragment_shader_file_path);
+        return render::DefaultShader(vertex_shader_file_path, fragment_shader_file_path);
     }();
     shader.use();
 
@@ -63,8 +63,8 @@ int main(int, char **)
         glGenVertexArrays(1, &vertex_array_id);
         glBindVertexArray(vertex_array_id);
 
-        const auto attribute_position_location = shader.location(Attribute::POSITION_VEC3);
-        const auto attribute_normal_location = shader.location(Attribute::NORMAL_VEC3);
+        const auto attribute_position_location = shader.location(render::Attribute::POSITION_VEC3);
+        const auto attribute_normal_location = shader.location(render::Attribute::NORMAL_VEC3);
         glEnableVertexAttribArray(attribute_position_location);
         glEnableVertexAttribArray(attribute_normal_location);
 
@@ -103,9 +103,9 @@ int main(int, char **)
     camera.set_position(glm::vec3(0.0f, 0.0f, 5.0f));
     camera.look_at(glm::vec3(0.0f, 0.5f, 0.0f));
 
-    shader.set_uniform(Uniform::LIGHT_POS_VEC3, light_position);
-    shader.set_uniform(Uniform::LIGHT_COLOR_VEC3, light_color);
-    shader.set_uniform(Uniform::OBJECT_COLOR_VEC3, object_color);
+    shader.set_uniform(render::Uniform::LIGHT_POS_VEC3, light_position);
+    shader.set_uniform(render::Uniform::LIGHT_COLOR_VEC3, light_color);
+    shader.set_uniform(render::Uniform::OBJECT_COLOR_VEC3, object_color);
 
     while (!window.shouldClose())
     {
@@ -121,11 +121,11 @@ int main(int, char **)
         model_matrix = glm::rotate(model_matrix,
                                    static_cast<GLfloat>(glfwGetTime()),
                                    glm::vec3(0.0f, 0.0f, 1.0f));
-        shader.set_uniform(Uniform::MODEL_MATRIX, model_matrix);
-        shader.set_uniform(Uniform::VIEW_MATRIX, camera.view());
-        shader.set_uniform(Uniform::PROJECTION_MATRIX, camera.projection());
+        shader.set_uniform(render::Uniform::MODEL_MATRIX, model_matrix);
+        shader.set_uniform(render::Uniform::VIEW_MATRIX, camera.view());
+        shader.set_uniform(render::Uniform::PROJECTION_MATRIX, camera.projection());
         const auto camera_position = camera.position();
-        shader.set_uniform(Uniform::CAMERA_POS_VEC3, camera_position);
+        shader.set_uniform(render::Uniform::CAMERA_POS_VEC3, camera_position);
 
         glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices_count));
 

@@ -8,6 +8,9 @@
 
 #include <Render/Shader.h>
 
+namespace render
+{
+
 class Scene;
 class Node
 {
@@ -51,3 +54,5 @@ public:
 private:
     std::vector<Node> _nodes;
 };
+
+} // namespace render

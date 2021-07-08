@@ -8,6 +8,9 @@
 
 namespace fs = std::filesystem;
 
+namespace render
+{
+
 enum class Attribute
 {
     POSITION_VEC3,
@@ -69,5 +72,7 @@ private:
     std::optional<AttributeLocations> cached_attribute_locations = std::nullopt;
     std::optional<UniformLocations> cached_uniform_locations = std::nullopt;
 };
+
+} // namespace render
 
 #include <Render/Shader.inl>

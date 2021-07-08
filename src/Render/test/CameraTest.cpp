@@ -5,14 +5,14 @@
 
 TEST_CASE("Default camera consistence", "[camera]")
 {
-    Camera camera{};
+    render::Camera camera{};
     REQUIRE(glm::normalize(camera.view_direction()) == camera.view_direction());
     REQUIRE(glm::normalize(camera.point_of_view() - camera.position()) == camera.view_direction());
 }
 
 TEST_CASE("Camera position, view_direction", "[camera]")
 {
-    Camera camera{};
+    render::Camera camera{};
     SECTION("position")
     {
         const auto point = glm::vec3{1.0f, 2.0f, 3.0f};
@@ -29,7 +29,7 @@ TEST_CASE("Camera position, view_direction", "[camera]")
 
 TEST_CASE("Camera::look_at", "[camera]")
 {
-    Camera camera{};
+    render::Camera camera{};
     const auto point_of_view = glm::vec3{1.0f, 2.0f, 3.0f};
     camera.look_at(point_of_view);
     REQUIRE(camera.point_of_view() == point_of_view);

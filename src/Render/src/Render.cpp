@@ -6,6 +6,9 @@
 #include <fmt/format.h>
 #include <glad/glad.h>
 
+namespace render
+{
+
 inline namespace
 {
 void GLAPIENTRY gl_message_callback(GLenum source,
@@ -55,3 +58,5 @@ void Renderer::update_viewport_size_if_needed(std::uint16_t width, std::uint16_t
     }
     glViewport(0, 0, width, height);
 }
+
+} // namespace render
