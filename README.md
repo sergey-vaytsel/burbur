@@ -1,9 +1,9 @@
-# Project
-![workflow](https://github.com/sergey-vaytsel/burbur/actions/workflows/cmake.yml/badge.svg)
+# Burbur
+[![](https://github.com/sergey-vaytsel/burbur/actions/workflows/cmake.yml/badge.svg)](https://github.com/sergey-vaytsel/burbur/actions/workflows/cmake.yml)
 
-## Build
+Just for practice.
 
 ```
-mkdir build && cd build
-cmake ..
+mkdir build && cd build && cmake ..
+cmake --build .
 ```

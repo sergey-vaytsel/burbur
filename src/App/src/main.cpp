@@ -19,11 +19,13 @@
 
 namespace fs = std::filesystem;
 
+//! /todo copy bin, test to binaries
 // {PROJECT_DIR}/build/src/App/App.exe
 const auto g_project_path = fs::current_path() / "../../..";
 
 int main(int, char **)
 {
+    //! /todo imgui
     Window window{};
 
     if (auto res = window.init(640, 480, "Project"))
@@ -47,6 +49,8 @@ int main(int, char **)
     const auto &mesh = model.meshes()[0];
     const auto vertices_count = mesh.vertices.size();
     {
+        //! /todo model scene node
+
         const auto vertices = mesh.vertices;
         constexpr auto vertex_size = sizeof(vertices[0]);
         const auto vertices_size = vertices_count * vertex_size;
@@ -94,6 +98,8 @@ int main(int, char **)
                               GL_FALSE,
                               normal_size,
                               static_cast<void *>(0));
+
+        //! /todo use index buffer
     }
 
     const auto light_position = glm::vec3{5.0f, 5.0f, 1.0f};
@@ -123,10 +129,13 @@ int main(int, char **)
             return res;
         }();
         shader.set_uniform(render::Uniform::MODEL_MATRIX, model_matrix);
+
+        //! /todo camera controller
         shader.set_uniform(render::Uniform::VIEW_MATRIX, camera.view());
         shader.set_uniform(render::Uniform::PROJECTION_MATRIX, camera.projection());
         shader.set_uniform(render::Uniform::CAMERA_POS_VEC3, camera.position());
 
+        //! /todo render.draw(scene);
         glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices_count));
 
         window.swapBuffers();

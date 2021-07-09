@@ -110,7 +110,7 @@ std::tuple<Vertices, Normals, Indices, Meshes> make_meshes(const aiScene *const 
         }
 
         first_indices_indexes.push_back(static_cast<ptrdiff_t>(indices.size()));
-        for (const auto face : std::span{mesh->mFaces, mesh->mNumFaces})
+        for (const auto &face : std::span{mesh->mFaces, mesh->mNumFaces})
         {
             const auto face_indices = std::span(face.mIndices, face.mNumIndices);
             indices.insert(indices.end(), face_indices.begin(), face_indices.end());
