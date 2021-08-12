@@ -1,0 +1,6 @@
+# copy from https://github.com/conan-io/cmake-conan
+cmake/conan.cmake linguist-generated=true
+# useful things from work
+cmake/warnings.cmake linguist-generated=true
+# test models from https://github.com/assimp/assimp
+test/ linguist-generated=true
