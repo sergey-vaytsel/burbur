@@ -12,7 +12,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
-      run: sudo apt install -y libgl-dev
+      run: |
+        sudo apt install -y libgl-dev
+        sudo apt-get update
     - name: Get Conan
       uses: turtlebrowser/get-conan@v1.0
     - name: Configure CMake
