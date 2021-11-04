@@ -35,10 +35,8 @@ void GLAPIENTRY gl_message_callback(GLenum source,
 
 } // namespace
 
-Renderer::Renderer(GLADloadproc glad_load_procedure)
+Renderer::Renderer()
 {
-    gladLoadGLLoader(glad_load_procedure);
-
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
     glClearColor(0.2f, 0.2f, 0.2f, 1.f);

@@ -1,14 +1,12 @@
 #pragma once
 #include <string>
 #include <tuple>
-
-#include <glad/glad.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#include <memory>
 
 class Window final
 {
 public:
+    Window();
     ~Window();
 
     int init(unsigned width, unsigned height, const std::string &name);
@@ -20,5 +18,6 @@ public:
     [[nodiscard]] std::tuple<std::uint16_t, std::uint16_t> size();
 
 private:
-    GLFWwindow *_glfw_window_ptr;
+    class WindowImpl;
+    std::unique_ptr<WindowImpl> _p_impl;
 };

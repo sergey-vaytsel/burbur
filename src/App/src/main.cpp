@@ -1,3 +1,11 @@
+#include "Window.h"
+#include "Utils.h"
+
+#include <Model/Model.h>
+#include <Render/Camera.h>
+#include <Render/Render.h>
+#include <Render/Shader.h>
+
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -5,23 +13,14 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
 #include <fmt/format.h>
-
 #include <glad/glad.h>
-
-#include <Model/Model.h>
-#include <Render/Camera.h>
-#include <Render/Render.h>
-#include <Render/Shader.h>
-
-#include "Window.h"
 
 namespace fs = std::filesystem;
 
 //! /todo copy bin, test to binaries
 // {PROJECT_DIR}/build/src/App/App.exe
-const auto g_project_path = fs::current_path() / "../../..";
+const auto g_project_path = fs::current_path() / "../../../../..";
 
 int main(int, char **)
 {
@@ -34,7 +33,7 @@ int main(int, char **)
         return -1;
     }
 
-    render::Renderer render{GLADloadproc(glfwGetProcAddress)};
+    render::Renderer render;
     render::Camera camera;
     auto shader = [] {
         const auto shader_path = g_project_path / "bin/shaders";
@@ -125,7 +124,7 @@ int main(int, char **)
             auto res = glm::mat4(1.0f);
             res = glm::rotate(res, std::numbers::pi_v<float> / 2, glm::vec3(1.0f, 0.0f, 0.0f));
             res =
-                glm::rotate(res, static_cast<GLfloat>(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
+                glm::rotate(res, static_cast<GLfloat>(get_time()), glm::vec3(0.0f, 0.0f, 1.0f));
             return res;
         }();
         shader.set_uniform(render::Uniform::MODEL_MATRIX, model_matrix);
