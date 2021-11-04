@@ -5,6 +5,8 @@ set(SRC_LIST
 
     src/Window.h
     src/Window.cpp
+    src/Utils.h
+    src/Utils.cpp
 )
 
 add_burbur_executable(${MODULE_NAME} ${SRC_LIST})
