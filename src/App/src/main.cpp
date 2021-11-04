@@ -16,6 +16,10 @@
 #include <fmt/format.h>
 #include <glad/glad.h>
 
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
 namespace fs = std::filesystem;
 
 //! /todo copy bin, test to binaries
@@ -136,6 +140,17 @@ int main(int, char **)
 
         //! /todo render.draw(scene);
         glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices_count));
+
+        {
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
+
+            ImGui::Begin("Example");
+            ImGui::End();
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        }
 
         widget.swapBuffers();
         widget.pollEvents();

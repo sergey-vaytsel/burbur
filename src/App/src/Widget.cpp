@@ -7,6 +7,10 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
 inline namespace
 {
 
@@ -78,6 +82,15 @@ int Widget::WidgetImpl::init(unsigned width, unsigned height, const std::string 
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
     gladLoadGLLoader(GLADloadproc(glfwGetProcAddress));
+
+    IMGUI_CHECKVERSION();
+
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
+    ImGui_ImplGlfw_InitForOpenGL(this->_glfw_window_ptr, true);
+
+    ImGui_ImplOpenGL3_Init("#version 130");
+    ImGui::StyleColorsDark();
 
     return 0;
 }

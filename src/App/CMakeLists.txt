@@ -7,7 +7,12 @@ set(SRC_LIST
     src/Widget.cpp
     src/Utils.h
     src/Utils.cpp
+
+    ${CONAN_SRC_DIRS_IMGUI}/imgui_impl_glfw.cpp
+    ${CONAN_SRC_DIRS_IMGUI}/imgui_impl_opengl3.cpp
 )
+
+include_directories(${CONAN_SRC_DIRS_IMGUI})
 
 add_burbur_executable(${MODULE_NAME} ${SRC_LIST})
 
