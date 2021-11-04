@@ -1,4 +1,4 @@
-#include "Window.h"
+#include "Widget.h"
 #include <iostream>
 
 #include <fmt/format.h>
@@ -23,10 +23,10 @@ void key_callback(GLFWwindow *const window, const int key, const int, const int 
 
 } // namespace
 
-class Window::WindowImpl
+class Widget::WidgetImpl
 {
 public:
-    ~WindowImpl();
+    ~WidgetImpl();
 
     int init(unsigned width, unsigned height, const std::string &name);
     [[nodiscard]] bool shouldClose() const;
@@ -40,13 +40,13 @@ private:
    GLFWwindow *_glfw_window_ptr;
 };
 
-Window::WindowImpl::~WindowImpl()
+Widget::WidgetImpl::~WidgetImpl()
 {
     glfwDestroyWindow(_glfw_window_ptr);
     glfwTerminate();
 }
 
-int Window::WindowImpl::init(unsigned width, unsigned height, const std::string &name)
+int Widget::WidgetImpl::init(unsigned width, unsigned height, const std::string &name)
 {
     glfwSetErrorCallback(error_callback);
 
@@ -82,22 +82,22 @@ int Window::WindowImpl::init(unsigned width, unsigned height, const std::string 
     return 0;
 }
 
-bool Window::WindowImpl::shouldClose() const
+bool Widget::WidgetImpl::shouldClose() const
 {
     return glfwWindowShouldClose(_glfw_window_ptr);
 }
 
-void Window::WindowImpl::swapBuffers()
+void Widget::WidgetImpl::swapBuffers()
 {
     glfwSwapBuffers(_glfw_window_ptr);
 }
 
-void Window::WindowImpl::pollEvents()
+void Widget::WidgetImpl::pollEvents()
 {
     glfwPollEvents();
 }
 
-std::tuple<std::uint16_t, std::uint16_t> Window::WindowImpl::size()
+std::tuple<std::uint16_t, std::uint16_t> Widget::WidgetImpl::size()
 {
     int width, height;
     glfwGetFramebufferSize(_glfw_window_ptr, &width, &height);
@@ -105,34 +105,34 @@ std::tuple<std::uint16_t, std::uint16_t> Window::WindowImpl::size()
 }
 
 
-Window::Window()
-    : _p_impl{std::make_unique<Window::WindowImpl>()}
+Widget::Widget()
+    : _p_impl{std::make_unique<Widget::WidgetImpl>()}
 {
 }
 
-Window::~Window() = default;
+Widget::~Widget() = default;
 
-int Window::init(unsigned width, unsigned height, const std::string &name)
+int Widget::init(unsigned width, unsigned height, const std::string &name)
 {
     return this->_p_impl->init(width, height, name);
 }
 
-bool Window::shouldClose() const
+bool Widget::shouldClose() const
 {
     return this->_p_impl->shouldClose();
 }
 
-void Window::swapBuffers()
+void Widget::swapBuffers()
 {
     this->_p_impl->swapBuffers();
 }
 
-void Window::pollEvents()
+void Widget::pollEvents()
 {
     this->_p_impl->pollEvents();
 }
 
-std::tuple<std::uint16_t, std::uint16_t> Window::size()
+std::tuple<std::uint16_t, std::uint16_t> Widget::size()
 {
     return this->_p_impl->size();
 }

@@ -1,4 +1,4 @@
-#include "Window.h"
+#include "Widget.h"
 #include "Utils.h"
 
 #include <Model/Model.h>
@@ -25,11 +25,11 @@ const auto g_project_path = fs::current_path() / "../../../../..";
 int main(int, char **)
 {
     //! /todo imgui
-    Window window{};
+    Widget widget{};
 
-    if (auto res = window.init(640, 480, "Project"))
+    if (auto res = widget.init(640, 480, "Project"))
     {
-        std::cout << fmt::format("Init window error code: {}", res);
+        std::cout << fmt::format("Init widget error code: {}", res);
         return -1;
     }
 
@@ -112,9 +112,9 @@ int main(int, char **)
     shader.set_uniform(render::Uniform::LIGHT_COLOR_VEC3, light_color);
     shader.set_uniform(render::Uniform::OBJECT_COLOR_VEC3, object_color);
 
-    while (!window.shouldClose())
+    while (!widget.shouldClose())
     {
-        auto [width, height] = window.size();
+        auto [width, height] = widget.size();
         auto ratio = static_cast<float>(width) / height;
         render.update_viewport_size_if_needed(width, height);
         camera.set_aspect_ratio_if_needed(ratio);
@@ -137,8 +137,8 @@ int main(int, char **)
         //! /todo render.draw(scene);
         glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices_count));
 
-        window.swapBuffers();
-        window.pollEvents();
+        widget.swapBuffers();
+        widget.pollEvents();
     }
 
     return 0;

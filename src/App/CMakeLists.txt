@@ -3,8 +3,8 @@ set(MODULE_NAME App)
 set(SRC_LIST
     src/main.cpp
 
-    src/Window.h
-    src/Window.cpp
+    src/Widget.h
+    src/Widget.cpp
     src/Utils.h
     src/Utils.cpp
 )
