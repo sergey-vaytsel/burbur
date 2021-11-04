@@ -123,11 +123,14 @@ std::tuple<Vertices, Normals, Indices, Meshes> make_meshes(const aiScene *const 
         const auto first_normals_index = first_normals_indexes[i];
         const auto first_indices_index = first_indices_indexes[i];
 
-        meshes.emplace_back(std::span{vertices.begin() + first_vertices_index, vertices.end()},
-                            mesh->mNormals == nullptr
+        auto vertices_view = std::span{vertices.begin() + first_vertices_index, vertices.end()};
+        auto indices_view = std::span{indices.begin() + first_indices_index, indices.end()};
+        auto normals_view = mesh->mNormals == nullptr
                                 ? std::span<glm::vec3>{}
-                                : std::span{normals.begin() + first_normals_index, normals.end()},
-                            std::span{indices.begin() + first_indices_index, indices.end()});
+                                : std::span{normals.begin() + first_normals_index, normals.end()};
+        meshes.emplace_back(std::move(vertices_view),
+                            std::move(normals_view),
+                            std::move(indices_view));
     }
     if (normals.size() != 0 && normals.size() != vertices.size())
     {
